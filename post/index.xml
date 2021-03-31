@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Posts on c332030</title>
+    <link>https://example.com/post/</link>
+    <description>Recent content in Posts on c332030</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Sun, 21 Mar 2021 18:48:00 +0000</lastBuildDate><atom:link href="https://example.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>java枚举成员方法</title>
+      <link>https://example.com/p/2021/03/java-enum-methods/</link>
+      <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
+      
+      <guid>https://example.com/p/2021/03/java-enum-methods/</guid>
+      <description>前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
+ public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
+   Enum 方法 我列出用的比较多的方法
+  name()</description>
+    </item>
+    
+    <item>
+      <title>前端流程控制</title>
+      <link>https://example.com/p/2021/03/web-flow-design/</link>
+      <pubDate>Wed, 17 Mar 2021 22:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/p/2021/03/web-flow-design/</guid>
+      <description>基本流程  初始化
+  业态切换（可选）
+  页面初始化（可选）
+  组件显示
+  下拉选项加载、设置
+        查询流程
+  压值
+  取值
+  值校验
+  非空校验
+  内容校验
+     数据转换、包装
+     网络通讯
+  设置通讯方式（get/post，form/json）
+  发起请求
+  结果处理（成功失败校验、错误提示）
+     数据处理
+  数据转换、格式化
+  数据展示</description>
+    </item>
+    
+  </channel>
+</rss>
