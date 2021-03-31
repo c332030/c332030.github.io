@@ -1,0 +1,16 @@
+
+name: mirror
+
+on: push
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: c332030/git-mirror-action@1.0
+        timeout-minutes: 2
+        env:
+          SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
+        with:
+          source-repo: git@github.com:c332030/${{ github.event.repository.name }}.github.io.git
+          destination-repo: git@gitee.com:c332030/${{ github.event.repository.name }}.gitee.io.git
