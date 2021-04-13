@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>sql on c332030</title>
+    <link>https://example.com/tags/sql/</link>
+    <description>Recent content in sql on c332030</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Thu, 01 Apr 2021 19:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/sql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>使用 count 查询 group by 后的数量返回 null</title>
+      <link>https://example.com/p/2021/04/select-count-from-group-by-return-null/</link>
+      <pubDate>Thu, 01 Apr 2021 19:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/p/2021/04/select-count-from-group-by-return-null/</guid>
+      <description>SELECT COUNT(*) FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID   SELECT COUNT(*) FROM ( SELECT 1 FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID ) t;   </description>
+    </item>
+    
+  </channel>
+</rss>

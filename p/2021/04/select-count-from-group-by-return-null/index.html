@@ -1,17 +1,17 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='来自长沙的java小哥哥'><title>关于我</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='SELECT COUNT(*) FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID   SELECT COUNT(*) FROM ( SELECT 1 FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID ) t;   '><title>使用 count 查询 group by 后的数量返回 null</title>
 
-<link rel='canonical' href='https://example.com/about/'>
+<link rel='canonical' href='https://example.com/p/2021/04/select-count-from-group-by-return-null/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='关于我'>
-<meta property='og:description' content='来自长沙的java小哥哥'>
-<meta property='og:url' content='https://example.com/about/'>
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='使用 count 查询 group by 后的数量返回 null'>
+<meta property='og:description' content='SELECT COUNT(*) FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID   SELECT COUNT(*) FROM ( SELECT 1 FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID ) t;   '>
+<meta property='og:url' content='https://example.com/p/2021/04/select-count-from-group-by-return-null/'>
 <meta property='og:site_name' content='c332030'>
-<meta property='og:type' content='article'><meta property='article:section' content='Page' /><meta property='article:published_time' content='2021-04-05T00:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-04-05T00:00:00&#43;00:00'/>
-<meta name="twitter:title" content="关于我">
-<meta name="twitter:description" content="来自长沙的java小哥哥">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='count' /><meta property='article:tag' content='group by' /><meta property='article:tag' content='sql' /><meta property='article:tag' content='mysql' /><meta property='article:published_time' content='2021-04-01T19:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-04-01T19:00:00&#43;00:00'/>
+<meta name="twitter:title" content="使用 count 查询 group by 后的数量返回 null">
+<meta name="twitter:description" content="SELECT COUNT(*) FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID   SELECT COUNT(*) FROM ( SELECT 1 FROM AUTH_USER u LEFT JOIN AUTH_USER_ROLE_RELATION rr ON u.ID = rr.USER_ID LEFT JOIN AUTH_ROLE r ON rr.ROLE_ID = r.ID WHERE u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39; GROUP BY u.ID ) t;   ">
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -24,7 +24,7 @@ if (!doNotTrack) {
 <script async src='https://www.google-analytics.com/analytics.js'></script>
 
     </head>
-    <body class="article-page keep-sidebar">
+    <body class="">
     <script>
         (function() {
             const colorSchemeKey = 'StackColorScheme';
@@ -46,7 +46,7 @@ if (!doNotTrack) {
             document.body.dataset.scheme = 'light';
         }
     })();
-</script><div class="container main-container flex on-phone--column extended ">
+</script><div class="container main-container flex on-phone--column extended article-page with-toolbar">
             <aside class="sidebar left-sidebar sticky">
     <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
         <span class="hamburger-box">
@@ -100,7 +100,7 @@ if (!doNotTrack) {
         
         
 
-        <li  class='current' >
+        <li >
             <a href='/about/'>
                 
                     <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
@@ -179,6 +179,19 @@ if (!doNotTrack) {
 </aside>
 
             <main class="main full-width">
+    <div id="article-toolbar">
+        <a href="https://example.com" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
     <article class="main-article">
     <header class="article-header">
 
@@ -186,13 +199,9 @@ if (!doNotTrack) {
     
 
     <h2 class="article-title">
-        <a href="/about/">关于我</a>
+        <a href="/p/2021/04/select-count-from-group-by-return-null/">使用 count 查询 group by 后的数量返回 null</a>
     </h2>
 
-    
-    <h3 class="article-subtitle">
-        来自长沙的java小哥哥
-    </h3>
     <footer class="article-time">
         <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
   <path stroke="none" d="M0 0h24v24H0z"/>
@@ -202,158 +211,48 @@ if (!doNotTrack) {
 
 
 
-        <time class="article-time--published">Apr 05, 2021</time>
+        <time class="article-time--published">Apr 01, 2021</time>
     </footer></div>
 </header>
 
     <section class="article-content">
-    <div class="paragraph">
-<p>姓名：袁兴旺<br/>
-性别：男<br/>
-生日：1996.03<br/>
-手机：+86-157-175-09433（同微信）<br/>
-邮箱：<a href="mailto:c332030@gmail.com">c332030@gmail.com</a><br/>
-主页：<a href="https://github.com/c332030">https://github.com/c332030</a><br/></p>
-</div>
-<div class="sect1">
-<h2 id="_教育">教育</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>院校：湖南理工学院<br/>
-专业：计算机科学与技术<br/>
-学历：18 级本科<br/></p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_获奖">获奖</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>软考中级软件设计师，2016.05</p>
-</li>
-<li>
-<p>程序设计竞赛二等奖</p>
-</li>
-<li>
-<p>二等奖学金</p>
-</li>
-</ul>
+    <div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">SELECT
+        COUNT(*)
+FROM
+    AUTH_USER u
+    LEFT JOIN
+        AUTH_USER_ROLE_RELATION rr
+            ON u.ID = rr.USER_ID
+    LEFT JOIN
+        AUTH_ROLE r
+            ON rr.ROLE_ID = r.ID
+    WHERE
+        u.CREATOR_USER_ACCOUNT=&#39;shunde123&#39;
+    GROUP BY
+        u.ID</code></pre>
 </div>
 </div>
-</div>
-<div class="sect1">
-<h2 id="_技能">技能</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>熟练 java，熟悉 vue、react</p>
-</li>
-<li>
-<p>熟练 spring，熟悉 spring boot</p>
-</li>
-<li>
-<p>熟悉 mysql、mongo</p>
-</li>
-<li>
-<p>熟悉 gradle、maven</p>
-</li>
-<li>
-<p>熟练 svn/git</p>
-</li>
-<li>
-<p>熟悉 centos、docker、nginx</p>
-</li>
-<li>
-<p>熟悉 asciidoc、markdown</p>
-</li>
-</ul>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_经历">经历</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>深圳市泰久信息系统股份有限公司，java 开发，2019.03-至今</p>
-<div class="ulist">
-<ul>
-<li>
-<p>2020.11 公司企学院讲课：《JDK新特性介绍》</p>
-</li>
-<li>
-<p>2020.07 晋级中级 java 开发</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>赞同科技股份有限公司，java开发，2017.11-2019.02</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_项目">项目</h2>
-<div class="sectionbody">
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>crm</p>
-</li>
-<li>
-<p>etcd-manager-react-ts，个人项目独立开发，2019.07</p>
-<div class="ulist">
-<ul>
-<li>
-<p>etcd v2 web 管理工具，纯静态部署；</p>
-</li>
-<li>
-<p>使用 react.js, typescript, elementUI；</p>
-</li>
-<li>
-<p><a href="https://github.com/c332030/etcd-manager-react-ts">https://github.com/c332030/etcd-manager-react-ts</a>；</p>
-</li>
-</ul>
-</div>
-</li>
-<li>
-<p>储物柜</p>
-</li>
-<li>
-<p>智能柜台</p>
-</li>
-<li>
-<p>银行柜面系统</p>
-</li>
-</ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_个人">个人</h2>
-<div class="sectionbody">
-<div class="ulist">
-<ul>
-<li>
-<p>强迫症晚期患者；</p>
-</li>
-<li>
-<p>github/gitee 重度用户；</p>
-</li>
-<li>
-<p>喜欢折腾，gitee 上那么多提交全是自己折腾时的笔记（后续提交到 github）；</p>
-</li>
-<li>
-<p>有自己的 centos 云服务器，部署了博客以及其他服务等。</p>
-</li>
-</ul>
-</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">SELECT
+        COUNT(*)
+    FROM
+        (  SELECT
+            1
+        FROM
+            AUTH_USER u
+        LEFT JOIN
+            AUTH_USER_ROLE_RELATION rr
+                ON u.ID = rr.USER_ID
+        LEFT JOIN
+            AUTH_ROLE r
+                ON rr.ROLE_ID = r.ID
+        WHERE
+            u.CREATOR_USER_ACCOUNT=&#39;shunde123&#39;
+        GROUP BY
+            u.ID ) t;</code></pre>
 </div>
 </div>
 
@@ -362,6 +261,18 @@ if (!doNotTrack) {
 
     <footer class="article-footer">
     
+    <section class="article-tags">
+        
+            <a href="/tags/count/">count</a>
+        
+            <a href="/tags/group-by/">group by</a>
+        
+            <a href="/tags/sql/">sql</a>
+        
+            <a href="/tags/mysql/">mysql</a>
+        
+    </section>
+
 
     
     <section class="article-copyright">
@@ -373,14 +284,20 @@ if (!doNotTrack) {
 
 
 
-        <span>CC BY-NC-ND</span>
+        <span>Licensed under CC BY-NC-SA 4.0</span>
     </section>
     </footer>
 
     
 </article>
 
-     
+    <aside class="related-contents--wrapper">
+    
+    
+</aside>
+
+
+    
         
     <div class="disqus-container">
     <div id="disqus_thread"></div>
@@ -440,8 +357,6 @@ if (!doNotTrack) {
         Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="2.3.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
     </section>
 </footer>
-
-    
 <div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
 
     
@@ -518,7 +433,6 @@ if (!doNotTrack) {
                 rel="stylesheet" 
                 href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
             >
-
             </main>
         </div>
         <script 
