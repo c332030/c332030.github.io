@@ -23,6 +23,16 @@
   </url>
   
   <url>
+    <loc>https://example.com/categories/</loc>
+    <lastmod>2021-03-21T18:48:00+00:00</lastmod>
+  </url>
+  
+  <url>
+    <loc>https://example.com/categories/</loc>
+    <lastmod>2021-03-21T18:48:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://example.com/tags/enum/</loc>
     <lastmod>2021-03-21T18:48:00+00:00</lastmod>
   </url>
@@ -48,6 +58,11 @@
   </url>
   
   <url>
+    <loc>https://example.com/categories/%E5%89%8D%E7%AB%AF/</loc>
+    <lastmod>2021-03-21T18:48:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://example.com/tags/%E5%89%8D%E7%AB%AF/</loc>
     <lastmod>2021-03-17T22:00:00+00:00</lastmod>
   </url>
@@ -58,16 +73,21 @@
   </url>
   
   <url>
+    <loc>https://example.com/categories/%E5%90%8E%E7%AB%AF/</loc>
+    <lastmod>2021-03-17T22:00:00+00:00</lastmod>
+  </url>
+  
+  <url>
     <loc>https://example.com/tags/%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</loc>
     <lastmod>2021-03-17T22:00:00+00:00</lastmod>
   </url>
   
   <url>
-    <loc>https://example.com/categories/</loc>
+    <loc>https://example.com/categories/frontend/</loc>
   </url>
   
   <url>
-    <loc>https://example.com/categories/test/</loc>
+    <loc>https://example.com/categories/backend/</loc>
   </url>
   
   <url>
