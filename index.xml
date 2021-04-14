@@ -7,53 +7,6 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Mon, 05 Apr 2021 00:00:00 +0000</lastBuildDate><atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>使用 count 查询 group by 后的数量返回 null</title>
-        <link>https://example.com/p/2021/04/select-count-from-group-by-return-null/</link>
-        <pubDate>Thu, 01 Apr 2021 19:00:00 +0000</pubDate>
-        
-        <guid>https://example.com/p/2021/04/select-count-from-group-by-return-null/</guid>
-        <description>&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;SELECT
-        COUNT(*)
-FROM
-    AUTH_USER u
-    LEFT JOIN
-        AUTH_USER_ROLE_RELATION rr
-            ON u.ID = rr.USER_ID
-    LEFT JOIN
-        AUTH_ROLE r
-            ON rr.ROLE_ID = r.ID
-    WHERE
-        u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39;
-    GROUP BY
-        u.ID&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;SELECT
-        COUNT(*)
-    FROM
-        (  SELECT
-            1
-        FROM
-            AUTH_USER u
-        LEFT JOIN
-            AUTH_USER_ROLE_RELATION rr
-                ON u.ID = rr.USER_ID
-        LEFT JOIN
-            AUTH_ROLE r
-                ON rr.ROLE_ID = r.ID
-        WHERE
-            u.CREATOR_USER_ACCOUNT=&amp;#39;shunde123&amp;#39;
-        GROUP BY
-            u.ID ) t;&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
-        </item>
-        <item>
         <title>java枚举成员方法</title>
         <link>https://example.com/p/2021/03/java-enum-methods/</link>
         <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
