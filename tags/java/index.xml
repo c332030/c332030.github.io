@@ -9,10 +9,10 @@
     <lastBuildDate>Sun, 21 Mar 2021 18:48:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/java/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>java枚举成员方法</title>
-      <link>https://example.com/p/2021/03/java-enum-methods/</link>
+      <link>https://example.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</link>
       <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/03/java-enum-methods/</guid>
+      <guid>https://example.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</guid>
       <description>前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
  public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
    Enum 方法 我列出用的比较多的方法

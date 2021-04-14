@@ -9,10 +9,10 @@
     <lastBuildDate>Wed, 17 Mar 2021 22:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/%E5%89%8D%E7%AB%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>前端流程控制</title>
-      <link>https://example.com/p/2021/03/web-flow-design/</link>
+      <link>https://example.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</link>
       <pubDate>Wed, 17 Mar 2021 22:00:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/03/web-flow-design/</guid>
+      <guid>https://example.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
       <description>基本流程  初始化
   业态切换（可选）
   页面初始化（可选）
