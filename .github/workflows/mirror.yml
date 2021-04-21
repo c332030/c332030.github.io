@@ -15,7 +15,7 @@ jobs:
           source-repo: git@github.com:${{ github.repository_owner }}/${{ github.repository_owner }}.github.io.git
           destination-repo: git@gitee.com:${{ github.repository_owner }}/${{ github.repository_owner }}.git
       - name: update Gitee Pages
-        uses: yanglbme/gitee-pages-action@main
+        uses: yanglbme/gitee-pages-action@v1.2.8
         with:
           gitee-username: ${{ github.repository_owner }}
           # 注意在 Settings->Secrets 配置 GITEE_PASSWORD
