@@ -6,7 +6,25 @@
     <description>Recent content in Tags on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 21 Mar 2021 18:48:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>adb</title>
+      <link>https://example.com/tags/adb/</link>
+      <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/tags/adb/</guid>
+      <description></description>
+    </item>
+    
+    <item>
+      <title>android</title>
+      <link>https://example.com/tags/android/</link>
+      <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
+      
+      <guid>https://example.com/tags/android/</guid>
+      <description></description>
+    </item>
+    
     <item>
       <title>enum</title>
       <link>https://example.com/tags/enum/</link>
