@@ -459,6 +459,43 @@ pause &gt;nul</code></pre>
 </div>
 </div>
 </div>
+<div class="sect1">
+<h2 id="_后记">后记</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>玩机过的老哥就会注意到，这里只是禁用了，没有清除应用数据，我有找到清除应用的命令：<code>adb shell pm clear 包名</code>，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。</p>
+</div>
+<div class="paragraph">
+<p> </p><details><summary> 
+错误日志:
+ </summary><div> <p></p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre>Exception occurred while executing &#39;clear&#39;:
+java.lang.SecurityException: adb clearing user data is forbidden.
+        at com.android.server.pm.OplusClearDataProtectManager.interceptClearUserDataIfNeeded(OplusClearDataProtectManager.java:87)
+        at com.android.server.pm.OplusBasePackageManagerService$OplusPackageManagerInternalImpl.interceptClearUserDataIfNeeded(OplusBasePackageManagerService.java:490)
+        at com.android.server.am.ActivityManagerService.clearApplicationUserData(ActivityManagerService.java:4692)
+        at com.android.server.pm.PackageManagerShellCommand.runClear(PackageManagerShellCommand.java:2148)
+        at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:237)
+        at android.os.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:98)
+        at android.os.ShellCommand.exec(ShellCommand.java:44)
+        at com.android.server.pm.PackageManagerService.onShellCommand(PackageManagerService.java:23342)
+        at android.os.Binder.shellCommand(Binder.java:936)
+        at android.os.Binder.onTransact(Binder.java:820)
+        at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4603)
+        at com.android.server.pm.PackageManagerService.onTransact(PackageManagerService.java:4844)
+        at com.android.server.pm.OplusPackageManagerService.onTransact(OplusPackageManagerService.java:150)
+        at android.os.Binder.execTransactInternal(Binder.java:1166)
+        at android.os.Binder.execTransact(Binder.java:1130)</pre>
+</div>
+</div>
+<div class="paragraph">
+<p> </p></div></details> <p></p>
+</div>
+</div>
+</div>
 
 </section>
 

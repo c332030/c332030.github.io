@@ -1,5 +1,5 @@
 
-name: mirror
+name: deploy
 
 on: push
 
