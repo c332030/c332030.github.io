@@ -8,22 +8,22 @@
     <language>zh-cn</language>
     <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://example.com/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>adb禁用自带应用</title>
-      <link>https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
+      <title>adb停用自带应用</title>
+      <link>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
       <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
-      <description>前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。
+      <guid>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
+      <description>前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
  启用应用：adb shell pm enable 包名
- 禁用应用：adb shell pm disable-user 包名
-  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：
-  打开开发者选项
-   现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
+ 停用应用：adb shell pm disable-user 包名
+  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
  进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。
- 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。
-    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb</description>
+ 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。
+    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb
+ https://developer.android.com/studio/releases/platform-tools
+   解压，配置环境变量，执行 adb version，可以看到安装成功了。</description>
     </item>
     
     <item>

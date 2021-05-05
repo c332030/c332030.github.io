@@ -7,16 +7,16 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://example.com/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>adb禁用自带应用</title>
-        <link>https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
+        <title>adb停用自带应用</title>
+        <link>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
         <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
         
-        <guid>https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
+        <guid>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
         <description>&lt;div class=&#34;sect1&#34;&gt;
 &lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。&lt;/p&gt;
+&lt;p&gt;新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
@@ -35,29 +35,19 @@
 &lt;p&gt;启用应用：&lt;code&gt;adb shell pm enable 包名&lt;/code&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;禁用应用：&lt;code&gt;adb shell pm disable-user 包名&lt;/code&gt;&lt;/p&gt;
+&lt;p&gt;停用应用：&lt;code&gt;adb shell pm disable-user 包名&lt;/code&gt;&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;sect2&#34;&gt;
 &lt;h3 id=&#34;_打开_usb_调试&#34;&gt;打开 usb 调试&lt;/h3&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;olist arabic&#34;&gt;
-&lt;ol class=&#34;arabic&#34;&gt;
-&lt;li&gt;
-&lt;p&gt;打开开发者选项&lt;/p&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。&lt;/p&gt;
+&lt;p&gt;要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
 &lt;p&gt;进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。&lt;/p&gt;
+&lt;p&gt;现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;imageblock&#34;&gt;
 &lt;div class=&#34;content&#34;&gt;
@@ -87,7 +77,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;插上 usb 线，执行 &lt;code&gt;adb devices&lt;/code&gt; 可以看到设备已经失败了。&lt;/p&gt;
+&lt;p&gt;插上 usb 线，执行 &lt;code&gt;adb devices&lt;/code&gt; 可以看到设备已经识别了。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;imageblock&#34;&gt;
 &lt;div class=&#34;content&#34;&gt;
@@ -173,7 +163,7 @@
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_禁用脚本&#34;&gt;禁用脚本&lt;/h2&gt;
+&lt;h2 id=&#34;_停用脚本&#34;&gt;停用脚本&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
 &lt;p&gt;将以下内容保存到文本文档，重命名文档为 &lt;code&gt;disable.bat&lt;/code&gt; 执行：&lt;/p&gt;
@@ -227,7 +217,7 @@ pause &amp;gt;nul&lt;/code&gt;&lt;/pre&gt;
 &lt;h2 id=&#34;_后记&#34;&gt;后记&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;玩机过的老哥就会注意到，这里只是禁用了，没有清除应用数据，我有找到清除应用的命令：&lt;code&gt;adb shell pm clear 包名&lt;/code&gt;，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。&lt;/p&gt;
+&lt;p&gt;玩机过的老哥就会注意到，这里只是停用了，没有清除应用数据，我有找到清除应用的命令：&lt;code&gt;adb shell pm clear 包名&lt;/code&gt;，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
 &lt;p&gt; &lt;/p&gt;&lt;details&gt;&lt;summary&gt; 

@@ -1,47 +1,47 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
  启用应用：adb shell pm enable 包名
- 禁用应用：adb shell pm disable-user 包名
-  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：
-  打开开发者选项
-   现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
+ 停用应用：adb shell pm disable-user 包名
+  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
  进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。
- 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。
-    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb'><title>adb禁用自带应用</title>
+ 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。
+    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb
+ https://developer.android.com/studio/releases/platform-tools
+   解压，配置环境变量，执行 adb version，可以看到安装成功了。'><title>adb停用自带应用</title>
 
-<link rel='canonical' href='https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/'>
+<link rel='canonical' href='https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='adb禁用自带应用'>
-<meta property='og:description' content='前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='adb停用自带应用'>
+<meta property='og:description' content='前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
  启用应用：adb shell pm enable 包名
- 禁用应用：adb shell pm disable-user 包名
-  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：
-  打开开发者选项
-   现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
+ 停用应用：adb shell pm disable-user 包名
+  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
  进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。
- 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。
-    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb'>
-<meta property='og:url' content='https://example.com/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/'>
+ 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。
+    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb
+ https://developer.android.com/studio/releases/platform-tools
+   解压，配置环境变量，执行 adb version，可以看到安装成功了。'>
+<meta property='og:url' content='https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/'>
 <meta property='og:site_name' content='c332030'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='android' /><meta property='article:tag' content='adb' /><meta property='article:published_time' content='2021-05-05T11:00:00&#43;00:00'/><meta property='article:modified_time' content='2021-05-05T11:00:00&#43;00:00'/>
-<meta name="twitter:title" content="adb禁用自带应用">
-<meta name="twitter:description" content="前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。
+<meta name="twitter:title" content="adb停用自带应用">
+<meta name="twitter:description" content="前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
  启用应用：adb shell pm enable 包名
- 禁用应用：adb shell pm disable-user 包名
-  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：
-  打开开发者选项
-   现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
+ 停用应用：adb shell pm disable-user 包名
+  打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
  进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。
- 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。
-    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb">
+ 现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。
+    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb
+ https://developer.android.com/studio/releases/platform-tools
+   解压，配置环境变量，执行 adb version，可以看到安装成功了。">
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -231,7 +231,7 @@ if (!doNotTrack) {
     
 
     <h2 class="article-title">
-        <a href="/p/2021/05/adb%E7%A6%81%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/">adb禁用自带应用</a>
+        <a href="/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/">adb停用自带应用</a>
     </h2>
 
     <footer class="article-time">
@@ -252,7 +252,7 @@ if (!doNotTrack) {
 <h2 id="_前言">前言</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也禁用不了，了解到可以用 adb 来禁用，于是来试试。</p>
+<p>新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。</p>
 </div>
 </div>
 </div>
@@ -271,29 +271,19 @@ if (!doNotTrack) {
 <p>启用应用：<code>adb shell pm enable 包名</code></p>
 </div>
 <div class="paragraph">
-<p>禁用应用：<code>adb shell pm disable-user 包名</code></p>
+<p>停用应用：<code>adb shell pm disable-user 包名</code></p>
 </div>
 </div>
 <div class="sect2">
 <h3 id="_打开_usb_调试">打开 usb 调试</h3>
 <div class="paragraph">
-<p>要执行 adb 命令，手机需要使用 usb 连接电脑，步骤如下：</p>
-</div>
-<div class="olist arabic">
-<ol class="arabic">
-<li>
-<p>打开开发者选项</p>
-</li>
-</ol>
-</div>
-<div class="paragraph">
-<p>现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。</p>
+<p>要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。</p>
 </div>
 <div class="paragraph">
 <p>进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。</p>
 </div>
 <div class="paragraph">
-<p>现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开usb调试。</p>
+<p>现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -323,7 +313,7 @@ if (!doNotTrack) {
 </div>
 </div>
 <div class="paragraph">
-<p>插上 usb 线，执行 <code>adb devices</code> 可以看到设备已经失败了。</p>
+<p>插上 usb 线，执行 <code>adb devices</code> 可以看到设备已经识别了。</p>
 </div>
 <div class="imageblock">
 <div class="content">
@@ -409,7 +399,7 @@ if (!doNotTrack) {
 </div>
 </div>
 <div class="sect1">
-<h2 id="_禁用脚本">禁用脚本</h2>
+<h2 id="_停用脚本">停用脚本</h2>
 <div class="sectionbody">
 <div class="paragraph">
 <p>将以下内容保存到文本文档，重命名文档为 <code>disable.bat</code> 执行：</p>
@@ -463,7 +453,7 @@ pause &gt;nul</code></pre>
 <h2 id="_后记">后记</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>玩机过的老哥就会注意到，这里只是禁用了，没有清除应用数据，我有找到清除应用的命令：<code>adb shell pm clear 包名</code>，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。</p>
+<p>玩机过的老哥就会注意到，这里只是停用了，没有清除应用数据，我有找到清除应用的命令：<code>adb shell pm clear 包名</code>，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。</p>
 </div>
 <div class="paragraph">
 <p> </p><details><summary> 
