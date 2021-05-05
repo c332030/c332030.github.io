@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>Posts on c332030</title>
-    <link>https://example.com/post/</link>
+    <link>https://c332030.com/post/</link>
     <description>Recent content in Posts on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://example.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/post/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>adb停用自带应用</title>
-      <link>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
+      <link>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
       <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
+      <guid>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
       <description>前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
@@ -28,10 +28,10 @@
     
     <item>
       <title>java枚举成员方法</title>
-      <link>https://example.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</link>
+      <link>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</link>
       <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</guid>
+      <guid>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</guid>
       <description>前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
  public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
    Enum 方法 我列出用的比较多的方法
@@ -40,10 +40,10 @@
     
     <item>
       <title>前端流程控制</title>
-      <link>https://example.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</link>
+      <link>https://c332030.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</link>
       <pubDate>Wed, 17 Mar 2021 22:00:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
+      <guid>https://c332030.com/p/2021/03/%E5%89%8D%E7%AB%AF%E6%B5%81%E7%A8%8B%E6%8E%A7%E5%88%B6/</guid>
       <description>基本流程  初始化
   业态切换（可选）
   页面初始化（可选）

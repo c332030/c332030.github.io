@@ -2,17 +2,17 @@
 <rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
   <channel>
     <title>android on c332030</title>
-    <link>https://example.com/tags/android/</link>
+    <link>https://c332030.com/tags/android/</link>
     <description>Recent content in android on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://example.com/tags/android/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/tags/android/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>adb停用自带应用</title>
-      <link>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
+      <link>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
       <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
       
-      <guid>https://example.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
+      <guid>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
       <description>前言 新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。
    准备工作 了解 adb 命令 Google 到相关的命令如下：
  查询应用包名：adb shell pm list packages -s
