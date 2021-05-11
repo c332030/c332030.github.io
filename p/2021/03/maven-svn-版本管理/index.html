@@ -1,0 +1,890 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
+  maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
+  使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
+  一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖， 我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上， 部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。
+   除却版本定义和单分值的问题外，还有以下问题：
+  项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式， 要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。
+     方案 针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：
+  对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；
+  对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；
+  对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；
+  打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；
+  打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；
+  新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；'><title>maven&#43;svn 版本管理</title>
+
+<link rel='canonical' href='https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='maven&#43;svn 版本管理'>
+<meta property='og:description' content='前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
+  maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
+  使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
+  一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖， 我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上， 部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。
+   除却版本定义和单分值的问题外，还有以下问题：
+  项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式， 要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。
+     方案 针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：
+  对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；
+  对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；
+  对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；
+  打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；
+  打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；
+  新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；'>
+<meta property='og:url' content='https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/'>
+<meta property='og:site_name' content='c332030'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='maven' /><meta property='article:tag' content='svn' /><meta property='article:published_time' content='2021-03-21T18:48:00&#43;00:00'/><meta property='article:modified_time' content='2021-03-21T18:48:00&#43;00:00'/>
+<meta name="twitter:title" content="maven&#43;svn 版本管理">
+<meta name="twitter:description" content="前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
+  maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
+  使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
+  一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖， 我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上， 部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。
+   除却版本定义和单分值的问题外，还有以下问题：
+  项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式， 要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。
+     方案 针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：
+  对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；
+  对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；
+  对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；
+  打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；
+  打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；
+  新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；">
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-155324421-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+    </head>
+    <body class="">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.body.dataset.scheme = 'dark';
+        } else {
+            document.body.dataset.scheme = 'light';
+        }
+    })();
+</script><div class="container main-container flex on-phone--column extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+                    <img src="/favicon.ico" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+        
+        <h1 class="site-name"><a href="https://c332030.com">c332030</a></h1>
+        <h2 class="site-description">登高者必自卑，行远者必自迩，在这个世界上，重要的不是你正站在哪里，而是你正朝什么方向移动！</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+
+        
+            <li id="dark-mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <span>暗色模式</span>
+            </li>
+        
+    </ol>
+</aside>
+
+            <main class="main full-width">
+
+    <meta name="baidu-site-verification" content="code-3Nah158UAk" />
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c19a35cccc783e71cdcd7da41b7b33bb";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <div id="article-toolbar">
+        <a href="https://c332030.com" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%90%8E%E7%AB%AF/" style="background-color: #df7988; color: #fff;">
+                后端
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">maven&#43;svn 版本管理</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">2021-03-21</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    <div class="sect1">
+<h2 id="_前言">前言</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；</p>
+</li>
+<li>
+<p>使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；</p>
+</li>
+<li>
+<p>一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖，
+我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上，
+部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>除却版本定义和单分值的问题外，还有以下问题：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式，
+要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_方案">方案</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；</p>
+</li>
+<li>
+<p>对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；</p>
+</li>
+<li>
+<p>对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；</p>
+</li>
+<li>
+<p>打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；</p>
+</li>
+<li>
+<p>打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；</p>
+</li>
+<li>
+<p>新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；</p>
+</li>
+<li>
+<p>把 dependencyManagement 中的模块依赖复制过来。</p>
+</li>
+</ol>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_具体操作">具体操作</h2>
+<div class="sectionbody">
+<div class="sect2">
+<h3 id="_示例项目介绍">示例项目介绍</h3>
+<div class="paragraph">
+<p>首先介绍下为了写这个建的两个示例项目</p>
+</div>
+<div class="sect3">
+<h4 id="_c_commons">c-commons</h4>
+<div class="paragraph">
+<p>这个项目取名：c-commons，名字参考了 apache 的 commons 项目，顾名思义，存放公共代码的地方</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/commons-modules.png" alt="commons modules"/>
+</div>
+</div>
+</div>
+<div class="sect3">
+<h4 id="_c_mall">c-mall</h4>
+<div class="paragraph">
+<p>这个是一个商城的项目，这个项目要依赖 c-commons 中的模块：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/mall-modules.png" alt="mall modules"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/mall-manager-modules.png" alt="mall manager modules"/>
+</div>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_1_调整依赖">1. 调整依赖</h3>
+<div class="paragraph">
+<p>首先，所有引用到了模块中子模块的地方都直接指明版本号，这里还分两种情况</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>会被多个模块或者其他项目引用的模块；</p>
+</li>
+<li>
+<p>只会被某一个模块引用的模块。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>先说第二种情况，这种情况下，直接在引用的地方加上版本号。</p>
+</div>
+<div class="paragraph">
+<p>如果是第一种情况，我们在根目录的 pom.xml 中添加 dependencyManagement 标签，把这些会被多次引用的模块添加到其中，如图：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-pom.png" alt="c commons pom"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-dependencyManagement.png" alt="c commons dependencyManagement"/>
+</div>
+</div>
+<div class="paragraph">
+<p>而在当前项目其他模块中使用时，可以不指定版本号，此时 idea 左侧出现蓝色跳转符号：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-service-dependencies.png" alt="c commons service dependencies"/>
+</div>
+</div>
+<div class="paragraph">
+<p>当鼠标悬浮在符号上时，可以看到此处虽然没有指定版本号，但是却能够找到确切的版本，这个版本号是在 dependencyManagement 中定义的、</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-service-dependencies-notice.png" alt="c commons service dependencies notice"/>
+</div>
+</div>
+<div class="paragraph">
+<p>我这里还建了一个名为 c-commons-bom 的项目，目的是方便其他项目依赖 c-commons 和统一依赖版本。</p>
+</div>
+<div class="paragraph">
+<p>可以看到这个项目只有一个 pom.xml 文件：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-bom.png" alt="c commons bom"/>
+</div>
+</div>
+<div class="paragraph">
+<p>细心的人会发现，我在 c-commons 的 pom.xml 文件中加了星号的注释，这样的注释是成对的，包裹着其他项目会依赖的模块。我把这些模块复制到 c-commons-bom 中。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-pom-star.png" alt="c commons pom star"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/c-commons-bom-pom.png" alt="c commons bom pom"/>
+</div>
+</div>
+<div class="paragraph">
+<p>对 c-commons 和 c-commons-bom 项目分别执行 mvn clean install 命令，把项目存到本地仓库中。</p>
+</div>
+<div class="paragraph">
+<p>在 c-mall 中以 type=pom 和 scope=import 的方式引用：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/mall-pom.png" alt="mall pom"/>
+</div>
+</div>
+<div class="paragraph">
+<p>在 c-mall 中引用 c-commons 中的模块时，可以发现，也不需指定版本号了。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/mall-entity-pom.png" alt="mall entity pom"/>
+</div>
+</div>
+<div class="paragraph">
+<p>点进去，版本号是在本地仓库 c-commons-bom 项目中指定的：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/mall-entity-dependency-c-commons-entity.png" alt="mall entity dependency c commons entity"/>
+</div>
+</div>
+<div class="paragraph">
+<p>dependencyManagement 中还可以加入其他依赖并添加到 c-commons-bom 中，比如 fastjson，这样引入 c-commons 项目模块时，可以统一所有项目的 fastjson 版本。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_2_更新版本号">2. 更新版本号</h3>
+<div class="paragraph">
+<p>这里用到 maven 插件 <code>Versions Maven Plugin</code>，可以管理项目的版本号</p>
+</div>
+<div class="paragraph">
+<p><a href="https://www.mojohaus.org/versions-maven-plugin/" class="bare">https://www.mojohaus.org/versions-maven-plugin/</a></p>
+</div>
+<div class="paragraph">
+<p>用到的命令如下：</p>
+</div>
+<div class="paragraph">
+<p>更新版本号：<code>mvn versions:set</code></p>
+</div>
+<div class="paragraph">
+<p>回滚版本号：<code>mvn versions:revert</code></p>
+</div>
+<div class="paragraph">
+<p>执行命令时，会提示输入新的版本号：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/maven-versions-set.png" alt="maven versions set"/>
+</div>
+</div>
+<div class="paragraph">
+<p>执行完会生成 <code>.versionsBackup</code> 的备份文件，用于回滚版本号</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/maven-versions-set-result.png" alt="maven versions set result"/>
+</div>
+</div>
+<div class="paragraph">
+<p>回滚：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/maven-versions-revert.png" alt="maven versions revert"/>
+</div>
+</div>
+<div class="paragraph">
+<p>因为其他同事之前手动上传过 jar 到私服，指定了版本号，为了不冲突，需要指定一个新的版本号，命令如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell script" data-lang="shell script">mvn versions:set ^
+    -DnewVersion=1.0.1-SNAPSHOT</code></pre>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_3_生成_tags">3. 生成 tags</h3>
+<div class="paragraph">
+<p>这里用到 <code>Maven Release Plugin</code> 插件</p>
+</div>
+<div class="paragraph">
+<p><a href="https://maven.apache.org/maven-release/maven-release-plugin/" class="bare">https://maven.apache.org/maven-release/maven-release-plugin/</a></p>
+</div>
+<div class="paragraph">
+<p>用到的命令如下：</p>
+</div>
+<div class="paragraph">
+<p>版本号更新：<code>mvn release:prepare</code></p>
+</div>
+<div class="paragraph">
+<p>版本号回滚：<code>mvn release:rollback</code></p>
+</div>
+<div class="paragraph">
+<p>需要注意的是，这里需要在项目根 <code>pom.xml</code> 中添加 <code>scm</code> 标签，其中 <code>developerConnection</code> 是当前分支路径，<code>connection</code> 是项目的 svn 根路径。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-xml" data-lang="xml">&lt;?xml version=&#34;1.0&#34; encoding=&#34;UTF-8&#34;?&gt;
+&lt;project xmlns=&#34;http://maven.apache.org/POM/4.0.0&#34; xmlns:xsi=&#34;http://www.w3.org/2001/XMLSchema-instance&#34;
+    xsi:schemaLocation=&#34;http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd&#34;&gt;
+
+    &lt;!-- 忽略其他 --&gt;
+
+    &lt;scm&gt;
+        &lt;developerConnection&gt;scm:svn:https://localhost:8443/svn/c/project/c-commons/branches/c-commons&lt;/developerConnection&gt;
+        &lt;connection&gt;scm:svn:https://localhost:8443/svn/c/project/c-commons&lt;/connection&gt;
+    &lt;/scm&gt;
+
+    &lt;!-- 忽略其他 --&gt;
+
+&lt;/project&gt;</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>同时，项目的 svn 结构如下：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-text" data-lang="text">c-commons
+  branches
+    c-commons
+    c-commons-2.0.0-SNAPSHOT-jdk8
+  tags
+    c-commons-1.0.0</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p><code>branches</code> 文件夹下存放分支，项目同名目录 <code>c-commons</code> 存放主干，其他的是并行开发的分支。这里主干不放到 <code>trunk</code> 的原因是：<code>trunk</code> 目录 <code>checkout</code> 下来的文件夹和项目名称不一致，为了 <code>checkout</code> 后不需要修改文件夹名称，主干我放到 <code>branches</code> 下面。</p>
+</div>
+<div class="paragraph">
+<p>目前 branches 下只有 c-commons 目录，tags 目录是空的，因为我还没执行命令。</p>
+</div>
+<div class="paragraph">
+<p>这里需要 checkout 项目到新路径，因为使用 release 插件时，项目中不能存在有变更或者未受版本管理的文件，我这里执行：</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-shell script" data-lang="shell script">mvn release:prepare ^
+    -DautoVersionSubmodules=true</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>执行后，会提示输入三次：</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>第一次提示输入当前开发版本的发布版本，默认就是删除 <code>-SNAPSHOT</code> 的版本号；</p>
+</li>
+<li>
+<p>第二次提示输入 tags 目录下新分支名称，默认是 &#39;项目名称-发布版本号&#39;；</p>
+</li>
+<li>
+<p>第三次提示输入新的开发版本号，默认当前版本号 x.y.z 中的 z 加一。</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>没有特殊要求，按三次回车就好了。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/maven-release-prepare.png" alt="maven release prepare"/>
+</div>
+</div>
+<div class="paragraph">
+<p>执行完可以看到 tags 下多出新分支：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-tags.png" alt="svn tags"/>
+</div>
+</div>
+<div class="paragraph">
+<p>tags 下的分支版本号是发行类型的（没有后缀 -SNAPSHOT），scm 标签下的链接也更新了。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-tags-1.0.0.png" alt="svn tags 1.0.0"/>
+</div>
+</div>
+<div class="paragraph">
+<p>branches 下主分支版本号已更新：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-branches-trunk-root-pom.png" alt="svn branches trunk root pom"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-branches-trunk-root-pom-modules.png" alt="svn branches trunk root pom modules"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-branches-trunk-root-pom-module-dao.png" alt="svn branches trunk root pom module dao"/>
+</div>
+</div>
+<div class="paragraph">
+<p>需要注意的是，如果执行过程中发送错误，同时有部分代码已经提交了 svn，可以执行 <code>mvn release:rollback</code> 进行回滚，我这里就出错了。可以看到，编号为 11 的提交是执行 <code>prepare</code> 命令，编号为 12 的提交是 <code>rollback</code> 命令：</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src=".images/svn-history.png" alt="svn history"/>
+</div>
+</div>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_发布">发布</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>这里把 tags 下的分支 checkout 下来，执行 <code>mvn clean deploy</code> 就可以发布私服了，具体配置这里不作阐述，因为配置不复杂，而 nexus 私服的搭建又需要讲很多内容。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_后记">后记</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>完成整个流程还是花了我不少时间，踩了不少坑，网友如果有疑问，欢迎交流。</p>
+</div>
+</div>
+</div>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/maven/">maven</a>
+        
+            <a href="/tags/svn/">svn</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java枚举成员方法</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+
+    
+        
+    <div class="disqus-container">
+    <div id="disqus_thread"></div>
+<script type="application/javascript">
+    var disqus_config = function () {
+    
+    
+    
+    };
+    (function() {
+        if (["localhost", "127.0.0.1"].indexOf(window.location.hostname) != -1) {
+            document.getElementById('disqus_thread').innerHTML = 'Disqus comments not available by default when the website is previewed locally.';
+            return;
+        }
+        var d = document, s = d.createElement('script'); s.async = true;
+        s.src = '//' + "c332030" + '.disqus.com/embed.js';
+        s.setAttribute('data-timestamp', +new Date());
+        (d.head || d.body).appendChild(s);
+    })();
+</script>
+<noscript>Please enable JavaScript to view the <a href="https://disqus.com/?ref_noscript">comments powered by Disqus.</a></noscript>
+<a href="https://disqus.com" class="dsq-brlink">comments powered by <span class="logo-disqus">Disqus</span></a>
+</div>
+
+<style>
+    .disqus-container {
+        background-color: var(--card-background);
+        border-radius: var(--card-border-radius);
+        box-shadow: var(--shadow-l1);
+        padding: var(--card-padding);
+    }
+</style>
+
+<script>
+    window.addEventListener('onColorSchemeChange', (e) => {
+        if (DISQUS) {
+            DISQUS.reset({
+                reload: true
+            });
+        }
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2021 c332030
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="2.3.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>
