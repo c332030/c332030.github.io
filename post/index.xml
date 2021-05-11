@@ -6,7 +6,28 @@
     <description>Recent content in Posts on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 May 2021 21:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>maven&#43;svn 版本管理</title>
+      <link>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Tue, 11 May 2021 21:00:00 +0000</pubDate>
+      
+      <guid>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
+      <description>前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
+  maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
+  使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
+  一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖， 我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上， 部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。
+   除却版本定义和单分值的问题外，还有以下问题：
+  项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式， 要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。
+     方案 针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：
+  对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；
+  对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；
+  对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；
+  打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；
+  打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；
+  新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；</description>
+    </item>
+    
     <item>
       <title>adb停用自带应用</title>
       <link>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
@@ -36,27 +57,6 @@
  public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
    Enum 方法 我列出用的比较多的方法
   name()</description>
-    </item>
-    
-    <item>
-      <title>maven&#43;svn 版本管理</title>
-      <link>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
-      <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
-      
-      <guid>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
-      <description>前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
-  maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
-  使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
-  一直在单个分支上开发就会导致代码有变更时，旧项目无法再取到未变更的依赖， 我们也没法保留之前上线过的版本的源代码，导致旧版本有需求时，不得不加在在最新的代码上， 部署也是部署最新的代码，很多不是此次上线的功能也部署上去了。
-   除却版本定义和单分值的问题外，还有以下问题：
-  项目中的版本号都是手动管理，在 dependencies 中添加模块依赖时，要么采用占位符 ${} 的方式， 要么直接把版本号写在这里，这就导致后面版本号的更新操作变得困难或无法自动化处理。
-     方案 针对公司项目管理的这些问题，在征得领导的同意后，采取以下措施进行解决：
-  对项目的分支进行标准化管理，重点是功能变更测试完成后需要打 tag（具体见后文）；
-  对开发分支使用快照版本，为其他开发成员开启下载快照版本的功能；
-  对项目中所有当前项目的模块依赖直接指定版本号（便于使用自动化工具），并且对其他项目会用到的模块在根目录的 pom.xml 中使用 dependencyManagement 管理，这样子模块中的模块依赖就不需要指定版本号；
-  打 tag 之前，保证项目中依赖的其他项目的模块版本号都是发行类型（不以 -SNAPSHOT 结尾），保证依赖的代码不会变更；
-  打完 tag 的项目是发行版本，不再接受代码变更，并且上传依赖到私服；
-  新建一个 pom 类型的项目，名称以 -bom 结尾（参考 spring，不使用 dependencies 的原因是 bom 更方便输入）；</description>
     </item>
     
     <item>

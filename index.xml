@@ -6,398 +6,12 @@
         <description>Recent content on c332030</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Wed, 05 May 2021 11:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>adb停用自带应用</title>
-        <link>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
-        <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
-        
-        <guid>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
-        <description>&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_准备工作&#34;&gt;准备工作&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;sect2&#34;&gt;
-&lt;h3 id=&#34;_了解_adb_命令&#34;&gt;了解 adb 命令&lt;/h3&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;Google 到相关的命令如下：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;查询应用包名：&lt;code&gt;adb shell pm list packages -s&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;启用应用：&lt;code&gt;adb shell pm enable 包名&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;停用应用：&lt;code&gt;adb shell pm disable-user 包名&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect2&#34;&gt;
-&lt;h3 id=&#34;_打开_usb_调试&#34;&gt;打开 usb 调试&lt;/h3&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;usb调试.gif&#34; alt=&#34;usb调试&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect2&#34;&gt;
-&lt;h3 id=&#34;_安装_adb&#34;&gt;安装 adb&lt;/h3&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;Google 搜到 adb 下载地址，下载 windows 版本 adb&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;https://developer.android.com/studio/releases/platform-tools&#34; class=&#34;bare&#34;&gt;https://developer.android.com/studio/releases/platform-tools&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;adb.png&#34; alt=&#34;adb&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;解压，配置环境变量，执行 &lt;code&gt;adb version&lt;/code&gt;，可以看到安装成功了。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;adb-version.png&#34; alt=&#34;adb version&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;插上 usb 线，执行 &lt;code&gt;adb devices&lt;/code&gt; 可以看到设备已经识别了。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;adb-devices.png&#34; alt=&#34;adb devices&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;如果无法发现设备，可能需要安装 adb 驱动，可以试下这个：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;https://developer.android.com/studio/run/win-usb&#34; class=&#34;bare&#34;&gt;https://developer.android.com/studio/run/win-usb&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;adb-driver.png&#34; alt=&#34;adb driver&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_获取所有应用包名&#34;&gt;获取所有应用包名&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;在命令行中执行 &lt;code&gt;adb shell pm list packages -s &amp;gt; packages.txt&lt;/code&gt;，就把所有应用包名写入到了 &lt;code&gt;packages.txt&lt;/code&gt;。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;packages-txt.png&#34; alt=&#34;packages txt&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_找出应用对应的包名&#34;&gt;找出应用对应的包名&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;下载创建快捷方式应用，去酷安下载最新版或者下载我这分享的版本：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;https://www.coolapk.com/apk/com.x7890.shortcutcreator&#34; class=&#34;bare&#34;&gt;https://www.coolapk.com/apk/com.x7890.shortcutcreator&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;&lt;a href=&#34;创建快捷方式.apk&#34; class=&#34;bare&#34;&gt;创建快捷方式.apk&lt;/a&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;打开 &lt;code&gt;创建快捷方式&lt;/code&gt; 应用，右上角勾上显示系统应用&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;创建快捷方式-系统app.jpg&#34; alt=&#34;创建快捷方式 系统app&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;搜索 &lt;code&gt;浏览器&lt;/code&gt;，可以找到系统自带的浏览器，包名为：&lt;code&gt;com.heytap.browser&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;创建快捷方式-浏览器.jpg&#34; alt=&#34;创建快捷方式 浏览器&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_测试命令&#34;&gt;测试命令&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;执行下命令测试下：&lt;code&gt;adb shell pm disable-user com.heytap.browser&lt;/code&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;disable-browser.png&#34; alt=&#34;disable browser&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;可以看到浏览器已经被停用&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;disable-browser-result.jpg&#34; alt=&#34;disable browser result&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_停用脚本&#34;&gt;停用脚本&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;将以下内容保存到文本文档，重命名文档为 &lt;code&gt;disable.bat&lt;/code&gt; 执行：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-shell script&#34; data-lang=&#34;shell script&#34;&gt;@echo off
-
-title 停用真我GT应用 by c332030
-
-:: 启用
-:: set command=adb shell pm enable
-:: 停用
-set command=adb shell pm disable-user
-
-:: 乐划锁屏
-%command% com.heytap.pictorial
-
-:: 音乐
-%command% com.heytap.music
-
-:: 小布
-%command% com.heytap.speechassist
-
-:: 浏览器
-%command% com.heytap.browser
-
-:: 视频
-%command% com.heytap.yoli
-
-:: 图库
-%command% com.coloros.gallery3d
-
-pause &amp;gt;nul&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;输入如下：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;imageblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;img src=&#34;disable-script-output.png&#34; alt=&#34;disable script output&#34;/&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;在 &lt;code&gt;bat&lt;/code&gt; 中，双冒号是注释，启用应用时注释/取消注释对应的命令。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_后记&#34;&gt;后记&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;玩机过的老哥就会注意到，这里只是停用了，没有清除应用数据，我有找到清除应用的命令：&lt;code&gt;adb shell pm clear 包名&lt;/code&gt;，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt; &lt;/p&gt;&lt;details&gt;&lt;summary&gt; 
-错误日志:
- &lt;/summary&gt;&lt;div&gt; &lt;p&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;Exception occurred while executing &amp;#39;clear&amp;#39;:
-java.lang.SecurityException: adb clearing user data is forbidden.
-        at com.android.server.pm.OplusClearDataProtectManager.interceptClearUserDataIfNeeded(OplusClearDataProtectManager.java:87)
-        at com.android.server.pm.OplusBasePackageManagerService$OplusPackageManagerInternalImpl.interceptClearUserDataIfNeeded(OplusBasePackageManagerService.java:490)
-        at com.android.server.am.ActivityManagerService.clearApplicationUserData(ActivityManagerService.java:4692)
-        at com.android.server.pm.PackageManagerShellCommand.runClear(PackageManagerShellCommand.java:2148)
-        at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:237)
-        at android.os.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:98)
-        at android.os.ShellCommand.exec(ShellCommand.java:44)
-        at com.android.server.pm.PackageManagerService.onShellCommand(PackageManagerService.java:23342)
-        at android.os.Binder.shellCommand(Binder.java:936)
-        at android.os.Binder.onTransact(Binder.java:820)
-        at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4603)
-        at com.android.server.pm.PackageManagerService.onTransact(PackageManagerService.java:4844)
-        at com.android.server.pm.OplusPackageManagerService.onTransact(OplusPackageManagerService.java:150)
-        at android.os.Binder.execTransactInternal(Binder.java:1166)
-        at android.os.Binder.execTransact(Binder.java:1130)&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt; &lt;/p&gt;&lt;/div&gt;&lt;/details&gt; &lt;p&gt;&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
-        </item>
-        <item>
-        <title>java枚举成员方法</title>
-        <link>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</link>
-        <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
-        
-        <guid>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</guid>
-        <description>&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;public enum TestEnum {
-
-    TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;)
-    ;
-
-    private final String code;
-
-    private final String name;
-
-    TestEnum(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    // get set ...
-
-    public static TestEnum codeOf(String code) {
-        // 通过 code 获取枚举
-    }
-
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。&lt;br/&gt;
-我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_enum_方法&#34;&gt;Enum 方法&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;我列出用的比较多的方法&lt;/p&gt;
-&lt;/div&gt;
-&lt;div class=&#34;olist arabic&#34;&gt;
-&lt;ol class=&#34;arabic&#34;&gt;
-&lt;li&gt;
-&lt;p&gt;name()&lt;/p&gt;
-&lt;div class=&#34;literalblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;获取的枚举的名称，这是一个成员方法，作用和 getCode() 是一样的&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;static valueOf(String name)&lt;/p&gt;
-&lt;div class=&#34;literalblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;这个方法作用和 codeOf 是一样的，这是一个静态方法，，name() 和这个方法都存在，那么 code 这个字段就没有用了&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;ordinal()&lt;/p&gt;
-&lt;div class=&#34;literalblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;获取枚举定义顺序，从 0 开始，这是一个成员方法，后面开发中我看到 fastjson 的序列花配置使用到了这个方法。
-fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的每一个位置存储了一个配置，使用 ordinal 方法来确定配置的二进制位置。&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;.toString()&lt;/p&gt;
-&lt;div class=&#34;literalblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;底层调用的 name()，所以我在传递参数给 mybatis 时，有些字段直接传的枚举，限定参数范围。&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;li&gt;
-&lt;p&gt;values()&lt;/p&gt;
-&lt;div class=&#34;literalblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre&gt;获取所有的枚举，这是一个静态方法，并没有写在 Enum 类中，是 jdk 生成的，底层是深拷贝枚举类中的枚举数组。
-为什么要深拷贝一次呢，理由是避免枚举类中的枚举数组被修改，如果经常会调用这个方法，建议定义一个静态 List 常量保存起来，避免重复深拷贝。&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/li&gt;
-&lt;/ol&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_其他&#34;&gt;其他&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;考虑到枚举类中的枚举都是常量，我用 final 修饰了 name 字段，避免 name 字段被无意修改，&lt;br/&gt;
-后面升级 idea 后，枚举中没有 set 方法的字段都会自动加 final 修饰符，也就没有再手动修改了。&lt;/p&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;div class=&#34;sect1&#34;&gt;
-&lt;h2 id=&#34;_修改后的代码&#34;&gt;修改后的代码&lt;/h2&gt;
-&lt;div class=&#34;sectionbody&#34;&gt;
-&lt;div class=&#34;listingblock&#34;&gt;
-&lt;div class=&#34;content&#34;&gt;
-&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;public enum TestEnum {
-
-    TEST( &amp;#34;测试&amp;#34;),
-
-    ;
-
-    private final String name;
-
-    TestEnum(String name) {
-        this.name = name;
-    }
-
-    /*
-     * 兼容旧代码
-     */
-    public String getCode() {
-        return name();
-    }
-
-    public String getName() {
-        return name;
-    }
-}&lt;/code&gt;&lt;/pre&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-&lt;/div&gt;
-</description>
-        </item>
-        <item>
+        <lastBuildDate>Tue, 11 May 2021 21:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
         <title>maven&#43;svn 版本管理</title>
-        <link>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
-        <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
+        <link>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
+        <pubDate>Tue, 11 May 2021 21:00:00 +0000</pubDate>
         
-        <guid>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
+        <guid>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
         <description>&lt;div class=&#34;sect1&#34;&gt;
 &lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
@@ -802,6 +416,392 @@ fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的
 &lt;div class=&#34;sectionbody&#34;&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
 &lt;p&gt;完成整个流程还是花了我不少时间，踩了不少坑，网友如果有疑问，欢迎交流。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        <item>
+        <title>adb停用自带应用</title>
+        <link>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</link>
+        <pubDate>Wed, 05 May 2021 11:00:00 +0000</pubDate>
+        
+        <guid>https://c332030.com/p/2021/05/adb%E5%81%9C%E7%94%A8%E8%87%AA%E5%B8%A6%E5%BA%94%E7%94%A8/</guid>
+        <description>&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;新买的 真我GT 自带了一些应用，试过不是很好用，但是手机没有 root，在手机上卸载不了也停用不了，了解到可以用 adb 来停用，于是来试试。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_准备工作&#34;&gt;准备工作&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_了解_adb_命令&#34;&gt;了解 adb 命令&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;Google 到相关的命令如下：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;查询应用包名：&lt;code&gt;adb shell pm list packages -s&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;启用应用：&lt;code&gt;adb shell pm enable 包名&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;停用应用：&lt;code&gt;adb shell pm disable-user 包名&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_打开_usb_调试&#34;&gt;打开 usb 调试&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;usb调试.gif&#34; alt=&#34;usb调试&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_安装_adb&#34;&gt;安装 adb&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;Google 搜到 adb 下载地址，下载 windows 版本 adb&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;&lt;a href=&#34;https://developer.android.com/studio/releases/platform-tools&#34; class=&#34;bare&#34;&gt;https://developer.android.com/studio/releases/platform-tools&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;adb.png&#34; alt=&#34;adb&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;解压，配置环境变量，执行 &lt;code&gt;adb version&lt;/code&gt;，可以看到安装成功了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;adb-version.png&#34; alt=&#34;adb version&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;插上 usb 线，执行 &lt;code&gt;adb devices&lt;/code&gt; 可以看到设备已经识别了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;adb-devices.png&#34; alt=&#34;adb devices&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;如果无法发现设备，可能需要安装 adb 驱动，可以试下这个：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;&lt;a href=&#34;https://developer.android.com/studio/run/win-usb&#34; class=&#34;bare&#34;&gt;https://developer.android.com/studio/run/win-usb&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;adb-driver.png&#34; alt=&#34;adb driver&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_获取所有应用包名&#34;&gt;获取所有应用包名&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;在命令行中执行 &lt;code&gt;adb shell pm list packages -s &amp;gt; packages.txt&lt;/code&gt;，就把所有应用包名写入到了 &lt;code&gt;packages.txt&lt;/code&gt;。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;packages-txt.png&#34; alt=&#34;packages txt&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_找出应用对应的包名&#34;&gt;找出应用对应的包名&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;下载创建快捷方式应用，去酷安下载最新版或者下载我这分享的版本：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;&lt;a href=&#34;https://www.coolapk.com/apk/com.x7890.shortcutcreator&#34; class=&#34;bare&#34;&gt;https://www.coolapk.com/apk/com.x7890.shortcutcreator&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;&lt;a href=&#34;创建快捷方式.apk&#34; class=&#34;bare&#34;&gt;创建快捷方式.apk&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;打开 &lt;code&gt;创建快捷方式&lt;/code&gt; 应用，右上角勾上显示系统应用&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;创建快捷方式-系统app.jpg&#34; alt=&#34;创建快捷方式 系统app&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;搜索 &lt;code&gt;浏览器&lt;/code&gt;，可以找到系统自带的浏览器，包名为：&lt;code&gt;com.heytap.browser&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;创建快捷方式-浏览器.jpg&#34; alt=&#34;创建快捷方式 浏览器&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_测试命令&#34;&gt;测试命令&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;执行下命令测试下：&lt;code&gt;adb shell pm disable-user com.heytap.browser&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;disable-browser.png&#34; alt=&#34;disable browser&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;可以看到浏览器已经被停用&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;disable-browser-result.jpg&#34; alt=&#34;disable browser result&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_停用脚本&#34;&gt;停用脚本&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;将以下内容保存到文本文档，重命名文档为 &lt;code&gt;disable.bat&lt;/code&gt; 执行：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-shell script&#34; data-lang=&#34;shell script&#34;&gt;@echo off
+
+title 停用真我GT应用 by c332030
+
+:: 启用
+:: set command=adb shell pm enable
+:: 停用
+set command=adb shell pm disable-user
+
+:: 乐划锁屏
+%command% com.heytap.pictorial
+
+:: 音乐
+%command% com.heytap.music
+
+:: 小布
+%command% com.heytap.speechassist
+
+:: 浏览器
+%command% com.heytap.browser
+
+:: 视频
+%command% com.heytap.yoli
+
+:: 图库
+%command% com.coloros.gallery3d
+
+pause &amp;gt;nul&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;输入如下：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;disable-script-output.png&#34; alt=&#34;disable script output&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;在 &lt;code&gt;bat&lt;/code&gt; 中，双冒号是注释，启用应用时注释/取消注释对应的命令。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_后记&#34;&gt;后记&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;玩机过的老哥就会注意到，这里只是停用了，没有清除应用数据，我有找到清除应用的命令：&lt;code&gt;adb shell pm clear 包名&lt;/code&gt;，但是执行时却报错了，大意是真我禁用了这个命令，其他品牌可以试试，我这是手动清的数据。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt; &lt;/p&gt;&lt;details&gt;&lt;summary&gt; 
+错误日志:
+ &lt;/summary&gt;&lt;div&gt; &lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;Exception occurred while executing &amp;#39;clear&amp;#39;:
+java.lang.SecurityException: adb clearing user data is forbidden.
+        at com.android.server.pm.OplusClearDataProtectManager.interceptClearUserDataIfNeeded(OplusClearDataProtectManager.java:87)
+        at com.android.server.pm.OplusBasePackageManagerService$OplusPackageManagerInternalImpl.interceptClearUserDataIfNeeded(OplusBasePackageManagerService.java:490)
+        at com.android.server.am.ActivityManagerService.clearApplicationUserData(ActivityManagerService.java:4692)
+        at com.android.server.pm.PackageManagerShellCommand.runClear(PackageManagerShellCommand.java:2148)
+        at com.android.server.pm.PackageManagerShellCommand.onCommand(PackageManagerShellCommand.java:237)
+        at android.os.BasicShellCommandHandler.exec(BasicShellCommandHandler.java:98)
+        at android.os.ShellCommand.exec(ShellCommand.java:44)
+        at com.android.server.pm.PackageManagerService.onShellCommand(PackageManagerService.java:23342)
+        at android.os.Binder.shellCommand(Binder.java:936)
+        at android.os.Binder.onTransact(Binder.java:820)
+        at android.content.pm.IPackageManager$Stub.onTransact(IPackageManager.java:4603)
+        at com.android.server.pm.PackageManagerService.onTransact(PackageManagerService.java:4844)
+        at com.android.server.pm.OplusPackageManagerService.onTransact(OplusPackageManagerService.java:150)
+        at android.os.Binder.execTransactInternal(Binder.java:1166)
+        at android.os.Binder.execTransact(Binder.java:1130)&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt; &lt;/p&gt;&lt;/div&gt;&lt;/details&gt; &lt;p&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        <item>
+        <title>java枚举成员方法</title>
+        <link>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</link>
+        <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
+        
+        <guid>https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/</guid>
+        <description>&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_前言&#34;&gt;前言&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;public enum TestEnum {
+
+    TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;)
+    ;
+
+    private final String code;
+
+    private final String name;
+
+    TestEnum(String code, String name) {
+        this.code = code;
+        this.name = name;
+    }
+
+    // get set ...
+
+    public static TestEnum codeOf(String code) {
+        // 通过 code 获取枚举
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。&lt;br/&gt;
+我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_enum_方法&#34;&gt;Enum 方法&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;我列出用的比较多的方法&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;olist arabic&#34;&gt;
+&lt;ol class=&#34;arabic&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;name()&lt;/p&gt;
+&lt;div class=&#34;literalblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;获取的枚举的名称，这是一个成员方法，作用和 getCode() 是一样的&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;static valueOf(String name)&lt;/p&gt;
+&lt;div class=&#34;literalblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;这个方法作用和 codeOf 是一样的，这是一个静态方法，，name() 和这个方法都存在，那么 code 这个字段就没有用了&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;ordinal()&lt;/p&gt;
+&lt;div class=&#34;literalblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;获取枚举定义顺序，从 0 开始，这是一个成员方法，后面开发中我看到 fastjson 的序列花配置使用到了这个方法。
+fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的每一个位置存储了一个配置，使用 ordinal 方法来确定配置的二进制位置。&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;.toString()&lt;/p&gt;
+&lt;div class=&#34;literalblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;底层调用的 name()，所以我在传递参数给 mybatis 时，有些字段直接传的枚举，限定参数范围。&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;values()&lt;/p&gt;
+&lt;div class=&#34;literalblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre&gt;获取所有的枚举，这是一个静态方法，并没有写在 Enum 类中，是 jdk 生成的，底层是深拷贝枚举类中的枚举数组。
+为什么要深拷贝一次呢，理由是避免枚举类中的枚举数组被修改，如果经常会调用这个方法，建议定义一个静态 List 常量保存起来，避免重复深拷贝。&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_其他&#34;&gt;其他&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;考虑到枚举类中的枚举都是常量，我用 final 修饰了 name 字段，避免 name 字段被无意修改，&lt;br/&gt;
+后面升级 idea 后，枚举中没有 set 方法的字段都会自动加 final 修饰符，也就没有再手动修改了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_修改后的代码&#34;&gt;修改后的代码&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;public enum TestEnum {
+
+    TEST( &amp;#34;测试&amp;#34;),
+
+    ;
+
+    private final String name;
+
+    TestEnum(String name) {
+        this.name = name;
+    }
+
+    /*
+     * 兼容旧代码
+     */
+    public String getCode() {
+        return name();
+    }
+
+    public String getName() {
+        return name;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;

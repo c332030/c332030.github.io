@@ -6,13 +6,13 @@
     <description>Recent content in svn on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Sun, 21 Mar 2021 18:48:00 +0000</lastBuildDate><atom:link href="https://c332030.com/tags/svn/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 11 May 2021 21:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/tags/svn/index.xml" rel="self" type="application/rss+xml" />
     <item>
       <title>maven&#43;svn 版本管理</title>
-      <link>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
-      <pubDate>Sun, 21 Mar 2021 18:48:00 +0000</pubDate>
+      <link>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
+      <pubDate>Tue, 11 May 2021 21:00:00 +0000</pubDate>
       
-      <guid>https://c332030.com/p/2021/03/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
+      <guid>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</guid>
       <description>前言 公司项目的版本号要么是快照版本（以-SNAPSHOT），要么是发行版本却一直在一个分支上开发，这就会有几个问题：
   maven 默认不下载快照版本的依赖，导致私服上有依赖也下载不下来；
   使用发行版本时，却从来不变更版本号，导致依赖有更新却不会去私服上下载；
