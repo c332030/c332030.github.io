@@ -12,15 +12,15 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
         with:
-          source-repo: git@github.com:${{ github.repository_owner }}/${{ github.repository_owner }}.github.io.git
-          destination-repo: git@gitee.com:${{ github.repository_owner }}/${{ github.repository_owner }}.git
+          source-repo: git@github.com:${{ github.repository }}.git
+          destination-repo: git@gitee.com:${{ github.actor }}/${{ github.actor }}.git
       - name: update Gitee Pages
         uses: yanglbme/gitee-pages-action@v1.2.8
         with:
-          gitee-username: ${{ github.repository_owner }}
+          gitee-username: ${{ github.actor }}
           # 注意在 Settings->Secrets 配置 GITEE_PASSWORD
           gitee-password: ${{ secrets.GITEE_PASSWORD }}
           # 注意替换为你的 Gitee 仓库，仓库名严格区分大小写，请准确填写，否则会出错
-          gitee-repo: ${{ github.repository_owner }}/${{ github.repository_owner }}
+          gitee-repo: ${{ github.actor }}/${{ github.actor }}
           # 要部署的分支，默认是 master，若是其他分支，则需要指定（指定的分支必须存在）
           branch: main
