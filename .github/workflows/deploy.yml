@@ -18,7 +18,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: update Gitee Pages
-        uses: yanglbme/gitee-pages-action@v1.2.8
+        uses: yanglbme/gitee-pages-action@v1.3.2
         with:
           gitee-username: ${{ github.actor }}
           # 注意在 Settings->Secrets 配置 GITEE_PASSWORD
