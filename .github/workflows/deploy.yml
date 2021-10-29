@@ -11,8 +11,8 @@ jobs:
         env:
           SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
       - uses: cc332030/git-mirror-action@main
-        with:
-          destination-repo: git@gitee.com:${{ github.actor }}/${{ github.actor }}.git
+        env:
+          DESTINATION: git@gitee.com:${{ github.actor }}/${{ github.actor }}.git
         timeout-minutes: 2
   deploy:
     runs-on: ubuntu-latest
