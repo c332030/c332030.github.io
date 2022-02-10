@@ -1,0 +1,2 @@
+User-agent: *
+Sitemap: https://c332030.com/sitemap.xml
