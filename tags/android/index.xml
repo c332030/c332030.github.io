@@ -18,12 +18,11 @@
  查询应用包名：adb shell pm list packages -s
  启用应用：adb shell pm enable 包名
  停用应用：adb shell pm disable-user 包名
+ 卸载应用：adb shell pm uninstall -k --user 0 包名
   打开 usb 调试 要执行 adb 命令，手机需要使用 usb 连接电脑，现在的手机开发者选项都是隐藏了的，可以看到设置-其他设置，SIM 应用下面是最近任务。
  进入设置-关于手机-版本信息-版本号点7下-输入密码打开开发者模式。
  现在设置-其他设置，SIM 应用下面是开发者选项了，点进去，打开 usb 调试。
-    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb
- https://developer.android.com/studio/releases/platform-tools
-   解压，配置环境变量，执行 adb version，可以看到安装成功了。</description>
+    安装 adb Google 搜到 adb 下载地址，下载 windows 版本 adb</description>
     </item>
     
   </channel>

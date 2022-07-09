@@ -452,6 +452,9 @@
 &lt;div class=&#34;paragraph&#34;&gt;
 &lt;p&gt;停用应用：&lt;code&gt;adb shell pm disable-user 包名&lt;/code&gt;&lt;/p&gt;
 &lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;卸载应用：&lt;code&gt;adb shell pm uninstall -k --user 0  包名&lt;/code&gt;&lt;/p&gt;
+&lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;sect2&#34;&gt;
 &lt;h3 id=&#34;_打开_usb_调试&#34;&gt;打开 usb 调试&lt;/h3&gt;
