@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>Cookie on c332030</title>
+    <link>https://c332030.com/tags/cookie/</link>
+    <description>Recent content in Cookie on c332030</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Fri, 20 May 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/tags/cookie/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>解决升级微信开发者工具后无法保存Cookie</title>
+      <link>https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/</link>
+      <pubDate>Fri, 20 May 2022 22:00:00 +0000</pubDate>
+      
+      <guid>https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/</guid>
+      <description>发现问题 在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。
+ 通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。
+ 所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的
+   经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。
+ 微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。
+   解决问题 我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。
+ 方案1 不使用 HttpServletResponse.addCookie 但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。
+ /** * Web 工具类，判断是不是 https * @author c332030 */ public class WebUtils { public static final String HTTPS = &amp;#34;https&amp;#34;; private WebUtils() {} public static boolean isHttps(HttpServletRequest request) { // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto String scheme = request.</description>
+    </item>
+    
+  </channel>
+</rss>

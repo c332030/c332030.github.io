@@ -1,0 +1,856 @@
+<!DOCTYPE html>
+<html lang="zh-cn">
+    <head><meta charset='utf-8'>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='发现问题 在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。
+ 通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。
+ 所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的
+   经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。
+ 微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。
+   解决问题 我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。
+ 方案1 不使用 HttpServletResponse.addCookie 但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。
+ /** * Web 工具类，判断是不是 https * @author c332030 */ public class WebUtils { public static final String HTTPS = &amp;#34;https&amp;#34;; private WebUtils() {} public static boolean isHttps(HttpServletRequest request) { // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto String scheme = request.'><title>解决升级微信开发者工具后无法保存Cookie</title>
+
+<link rel='canonical' href='https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/'>
+
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='解决升级微信开发者工具后无法保存Cookie'>
+<meta property='og:description' content='发现问题 在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。
+ 通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。
+ 所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的
+   经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。
+ 微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。
+   解决问题 我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。
+ 方案1 不使用 HttpServletResponse.addCookie 但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。
+ /** * Web 工具类，判断是不是 https * @author c332030 */ public class WebUtils { public static final String HTTPS = &amp;#34;https&amp;#34;; private WebUtils() {} public static boolean isHttps(HttpServletRequest request) { // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto String scheme = request.'>
+<meta property='og:url' content='https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/'>
+<meta property='og:site_name' content='c332030'>
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='H5' /><meta property='article:tag' content='Cookie' /><meta property='article:published_time' content='2022-05-20T22:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-05-20T22:00:00&#43;00:00'/>
+<meta name="twitter:title" content="解决升级微信开发者工具后无法保存Cookie">
+<meta name="twitter:description" content="发现问题 在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。
+ 通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。
+ 所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的
+   经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。
+ 微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。
+   解决问题 我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。
+ 方案1 不使用 HttpServletResponse.addCookie 但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。
+ /** * Web 工具类，判断是不是 https * @author c332030 */ public class WebUtils { public static final String HTTPS = &amp;#34;https&amp;#34;; private WebUtils() {} public static boolean isHttps(HttpServletRequest request) { // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto String scheme = request.">
+<script type="application/javascript">
+var doNotTrack = false;
+if (!doNotTrack) {
+	window.ga=window.ga||function(){(ga.q=ga.q||[]).push(arguments)};ga.l=+new Date;
+	ga('create', 'UA-155324421-2', 'auto');
+	
+	ga('send', 'pageview');
+}
+</script>
+<script async src='https://www.google-analytics.com/analytics.js'></script>
+
+    </head>
+    <body class="">
+    <script>
+        (function() {
+            const colorSchemeKey = 'StackColorScheme';
+            if(!localStorage.getItem(colorSchemeKey)){
+                localStorage.setItem(colorSchemeKey, "auto");
+            }
+        })();
+    </script><script>
+    (function() {
+        const colorSchemeKey = 'StackColorScheme';
+        const colorSchemeItem = localStorage.getItem(colorSchemeKey);
+        const supportDarkMode = window.matchMedia('(prefers-color-scheme: dark)').matches === true;
+
+        if (colorSchemeItem == 'dark' || colorSchemeItem === 'auto' && supportDarkMode) {
+            
+
+            document.body.dataset.scheme = 'dark';
+        } else {
+            document.body.dataset.scheme = 'light';
+        }
+    })();
+</script><div class="container main-container flex on-phone--column extended article-page with-toolbar">
+            <aside class="sidebar left-sidebar sticky">
+    <button class="hamburger hamburger--spin" type="button" id="toggle-menu" aria-label="切换菜单">
+        <span class="hamburger-box">
+            <span class="hamburger-inner"></span>
+        </span>
+    </button>
+
+    <header class="site-info">
+        
+            <figure class="site-avatar">
+                
+                    <img src="/favicon.ico" width="300" height="300" class="site-logo" loading="lazy" alt="Avatar">
+                
+
+                
+                    <span class="emoji">🍥</span>
+                
+            </figure>
+        
+        <h1 class="site-name"><a href="https://c332030.com">c332030</a></h1>
+        <h2 class="site-description">登高者必自卑，行远者必自迩，在这个世界上，重要的不是你正站在哪里，而是你正朝什么方向移动！</h2>
+    </header>
+
+    <ol class="menu" id="main-menu">
+        
+        
+        
+
+        <li >
+            <a href='/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-home" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="5 12 3 12 12 3 21 12 19 12" />
+  <path d="M5 12v7a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-7" />
+  <path d="M9 21v-6a2 2 0 0 1 2 -2h2a2 2 0 0 1 2 2v6" />
+</svg>
+
+
+
+                
+                <span>主页</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/about/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-user" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="7" r="4" />
+  <path d="M6 21v-2a4 4 0 0 1 4 -4h4a4 4 0 0 1 4 4v2" />
+</svg>
+
+
+
+                
+                <span>关于我</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/archives/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-archive" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <rect x="3" y="4" width="18" height="4" rx="2" />
+  <path d="M5 8v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2 -2v-10" />
+  <line x1="10" y1="12" x2="14" y2="12" />
+</svg>
+
+
+
+                
+                <span>文章</span>
+            </a>
+        </li>
+        
+        
+
+        <li >
+            <a href='/search/'>
+                
+                    <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-search" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="10" cy="10" r="7" />
+  <line x1="21" y1="21" x2="15" y2="15" />
+</svg>
+
+
+
+                
+                <span>搜索</span>
+            </a>
+        </li>
+        
+
+        
+            <li id="dark-mode-toggle">
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="8" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-toggle-right" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="16" cy="12" r="2" />
+  <rect x="2" y="6" width="20" height="12" rx="6" />
+</svg>
+
+
+
+                <span>暗色模式</span>
+            </li>
+        
+    </ol>
+</aside>
+
+            <main class="main full-width">
+
+    <meta name="baidu-site-verification" content="code-3Nah158UAk" />
+
+    <script>
+        var _hmt = _hmt || [];
+        (function() {
+            var hm = document.createElement("script");
+            hm.src = "https://hm.baidu.com/hm.js?c19a35cccc783e71cdcd7da41b7b33bb";
+            var s = document.getElementsByTagName("script")[0];
+            s.parentNode.insertBefore(hm, s);
+        })();
+    </script>
+
+    <div id="article-toolbar">
+        <a href="https://c332030.com" class="back-home">
+            <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-chevron-left" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <polyline points="15 6 9 12 15 18" />
+</svg>
+
+
+
+            <span>Back</span>
+        </a>
+    </div>
+
+    <article class="main-article">
+    <header class="article-header">
+
+    <div class="article-details">
+    
+    <header class="article-category">
+        
+            <a href="/categories/%E5%90%8E%E7%AB%AF/" style="background-color: #df7988; color: #fff;">
+                后端
+            </a>
+        
+    </header>
+    
+
+    <h2 class="article-title">
+        <a href="/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/">解决升级微信开发者工具后无法保存Cookie</a>
+    </h2>
+
+    <footer class="article-time">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-clock" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <polyline points="12 7 12 12 15 15" />
+</svg>
+
+
+
+        <time class="article-time--published">2022-05-20</time>
+    </footer></div>
+</header>
+
+    <section class="article-content">
+    
+<div class="sect1">
+<h2 id="_发现问题">发现问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。</p>
+</div>
+<div class="paragraph">
+<p>通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。</p>
+</div>
+<div class="paragraph">
+<p>所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="img.jpg" alt="img"/>
+</div>
+</div>
+<div class="paragraph">
+<p>经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。</p>
+</div>
+<div class="paragraph">
+<p>微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_解决问题">解决问题</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。</p>
+</div>
+<div class="sect2">
+<h3 id="_方案1_不使用_httpservletresponse_addcookie">方案1 不使用 HttpServletResponse.addCookie</h3>
+<div class="paragraph">
+<p>但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Web 工具类，判断是不是 https
+ * @author c332030
+ */
+public class WebUtils {
+
+    public static final String HTTPS = &#34;https&#34;;
+
+    private WebUtils() {}
+
+    public static boolean isHttps(HttpServletRequest request) {
+
+        // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto
+        String scheme = request.getHeader(HttpHeaders.X_FORWARDED_PROTO);
+        if(StringUtils.isEmpty(scheme)) {
+            scheme = request.getScheme();
+        }
+
+        return HTTPS.equalsIgnoreCase(scheme);
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Cookie 工具类
+ * @author c332030
+ */
+public class CookieUtils {
+
+    private CookieUtils() {}
+
+    public static final String HTTPS = &#34;https&#34;;
+
+    public static final String Cookie_Domain = &#34;; Domain=&#34;;
+
+    public static final String Cookie_Path = &#34;; Path=&#34;;
+
+    public static final String Cookie_MaxAge = &#34;; Max-Age=&#34;;
+
+    public static final String Cookie_Secure = &#34;; Secure&#34;;
+
+    public static final String Cookie_HttpOnly = &#34;; HttpOnly&#34;;
+
+    public static final String Cookie_SameSite = &#34;; SameSite=&#34;;
+
+    public static final String Cookie_SameSite_None = &#34;None&#34;;
+    public static final String Cookie_SameSite_Lax = &#34;Lax&#34;;
+    public static final String Cookie_SameSite_Strict = &#34;Strict&#34;;
+
+    /**
+     * 添加 Cookie，替代 HttpServletResponse.addCookie()
+     */
+    public static void addCookie(HttpServletRequest request, HttpServletResponse response, Cookie cookie) {
+
+        StringBuilder cookHeaderStr = new StringBuilder();
+        cookHeaderStr.append(cookie.getName());
+        cookHeaderStr.append(&#34;=&#34;);
+        cookHeaderStr.append(cookie.getValue());
+
+        StringOptional.ofEmptyAble(cookie.getDomain()).ifNotEmpty(e -&gt; {
+            cookHeaderStr.append(Cookie_Domain);
+            cookHeaderStr.append(e);
+        });
+
+        cookHeaderStr.append(Cookie_Path);
+        String path = StringUtils.isNotEmpty(cookie.getPath()) ? cookie.getPath() : &#34;/&#34;;
+        cookHeaderStr.append(path);
+
+        if(cookie.getMaxAge() &gt;= 0) {
+            cookHeaderStr.append(Cookie_MaxAge);
+            cookHeaderStr.append(cookie.getMaxAge());
+        }
+
+        // SameSite=None 且 https 时，需要设置 Secure 属性
+        if(WebUtils.isHttps(request) || cookie.getSecure()) {
+            cookHeaderStr.append(Cookie_Secure);
+        }
+
+        if(cookie.isHttpOnly()) {
+            cookHeaderStr.append(Cookie_HttpOnly);
+        }
+
+        cookHeaderStr.append(Cookie_SameSite);
+        cookHeaderStr.append(Cookie_SameSite_None);
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookHeaderStr.toString());
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>如果在 https 的网络下设置 SameSite=None 但没有设置 Secure 属性时，也会出现感叹号，不过这个时候是有提示的。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="img.png" alt="img"/>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="img_1.png" alt="img 1"/>
+</div>
+</div>
+<div class="paragraph">
+<p>这个时候 token 的 Cookie 是管用了，可是 jsessionid 的 Cookie 没有加上 SameSite 属性，我只能换一种方案。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_方案2_使用过滤器">方案2 使用过滤器</h3>
+<div class="paragraph">
+<p>于是我想到了过滤器，直接上代码。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * 常量类不解释
+ * @author c332030
+ */
+public class HttpHeaderConstants {
+
+    private HttpHeaderConstants() {}
+
+    public static final String HTTPS = &#34;https&#34;;
+
+    public static final String Cookie_SameSite = &#34;SameSite&#34;;
+
+    public static final String Cookie_SameSite_Strict = &#34;Strict&#34;;
+
+    public static final String Cookie_SameSite_Lax = &#34;Lax&#34;;
+
+    public static final String Cookie_SameSite_None = &#34;None&#34;;
+
+    public static final String Cookie_Secure = &#34;Secure&#34;;
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * Cookie 工具类
+ * @author c332030
+ */
+public class CookieUtils {
+
+    private CookieUtils() {}
+
+    public static String getAppendedHeader(String header, String key) {
+        return getAppendedHeader(header, key, null);
+    }
+
+    public static String getAppendedHeader(String header, String key, String value) {
+        StringBuilder stringBuilder = new StringBuilder(header);
+        append(stringBuilder, key, value);
+        return stringBuilder.toString();
+    }
+
+    public static void append(StringBuilder headerBuilder, String key) {
+        append(headerBuilder, key, null);
+    }
+
+    public static void append(StringBuilder headerBuilder, String key, String value) {
+
+        headerBuilder.append(&#34;; &#34;);
+        headerBuilder.append(key);
+
+        if (StringUtils.isNotEmpty(value)) {
+            headerBuilder.append(&#34;=&#34;);
+            headerBuilder.append(value);
+        }
+    }
+
+    /**
+     * 获取 HttpServletResponse 中已有的 Cookie，然后拼接上 SameSite 属性
+     * @author c332030
+     */
+    public static void appendSameSite(HttpServletRequest request, HttpServletResponse response, String defaultSameSiteValue) {
+
+        Collection&lt;String&gt; cookieHeaders = response.getHeaders(HttpHeaders.SET_COOKIE);
+        if(CollectionUtils.isEmpty(cookieHeaders)) {
+            return;
+        }
+
+        List&lt;String&gt; cookieHeadersNew = new ArrayList&lt;&gt;(cookieHeaders.size());
+        cookieHeaders.forEach(cookieHeader -&gt; {
+
+            if (cookieHeader.contains(HttpHeaderConstants.Cookie_SameSite)) {
+                cookieHeadersNew.add(cookieHeader);
+                return;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder(cookieHeader);
+
+            // SameSite=None
+            CookieUtils.append(stringBuilder, HttpHeaderConstants.Cookie_SameSite, defaultSameSiteValue);
+
+            // Secure
+            if (WebUtils.isHttps(request) &amp;&amp; !cookieHeader.contains(HttpHeaderConstants.Cookie_Secure)) {
+                CookieUtils.append(stringBuilder, HttpHeaderConstants.Cookie_Secure);
+            }
+
+            cookieHeadersNew.add(stringBuilder.toString());
+        });
+
+        Iterator&lt;String&gt; cookieHeadersIterator = cookieHeadersNew.iterator();
+
+        // clear old cookies
+        response.setHeader(HttpHeaders.SET_COOKIE, cookieHeadersIterator.next());
+        while (cookieHeadersIterator.hasNext()) {
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieHeadersIterator.next());
+        }
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * SameSite 过滤器
+ * @author c332030
+ */
+public class SameSiteFilter implements Filter {
+
+    @Override
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        chain.doFilter(request, response);
+
+        // 执行完业务流程再修改 Cookie
+        CookieUtils.appendSameSite(request, response, HttpHeaderConstants.Cookie_SameSite_None);
+
+    }
+
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在单元测试中，CookieUtils.appendSameSite 方法正常运行，字符串拼接的值也是对的，可是返回的报文中却没有 SameSite 和 Secure 属性。</p>
+</div>
+<div class="paragraph">
+<p>查找 Stackoverflow 资料得知，response.setHeader 需要修改响应，但响应请求已经提交时，服务器就会忽略对 response 做出的修改。</p>
+</div>
+<div class="paragraph">
+<p>过滤器中出现这种情况只发生在添加了 @ResponseBody 注解的接口上。</p>
+</div>
+<div class="paragraph">
+<p>这个问题刚发现的时候，着实让我无法理解，后来我想到 response.getWriter 关闭后再写入数据时会报错，我也就理解了。</p>
+</div>
+<div class="paragraph">
+<p>这个时候就只能在提交前做修改了。</p>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_方案3_实现_responsebodyadvice_在提交前做修改">方案3 实现 ResponseBodyAdvice 在提交前做修改</h3>
+<div class="paragraph">
+<p>还好有先见之明，考虑到拼接 SameSite 的需求可能会在其他地方用到，所以抽离出了 CookieUtils.appendSameSite 方法。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">/**
+ * 实现 ResponseBodyAdvice，在提交前修改 Cookie
+ * @author c332030
+ */
+@ControllerAdvice
+public class SameSiteControllerAdvice implements ResponseBodyAdvice&lt;Object&gt; {
+
+    @Override
+    public boolean supports(MethodParameter returnType, Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; converterType) {
+        return true;
+    }
+
+    @Override
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
+                                  Class&lt;? extends HttpMessageConverter&lt;?&gt;&gt; selectedConverterType,
+                                  ServerHttpRequest serverHttpRequest,
+                                  ServerHttpResponse serverHttpResponse) {
+
+        HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
+        HttpServletResponse response = ((ServletServerHttpResponse) serverHttpResponse).getServletResponse();
+
+        CookieUtils.appendSameSite(request, response, HttpHeaderConstants.Cookie_SameSite_None);
+
+        return body;
+    }
+}</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>以前只知道有 @ControllerAdvice 这个注解，但是不知道具体干嘛用的，这次终于用上了。</p>
+</div>
+<div class="paragraph">
+<p>这次终于成功了，升级最新版微信开发工具测试后，Cookie 传递正常，来张成功的截图。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="image-2022-07-10-15-18-17-793.png" alt="image 2022 07 10 15 18 17 793"/>
+</div>
+</div>
+</div>
+<div class="sect2">
+<h3 id="_方案4使用_spring_boot_自带的功能">方案4，使用 Spring Boot 自带的功能</h3>
+<div class="paragraph">
+<p>这个方案我很早就搜到了，但是要求 Spring Boot 2.6.0+，我们现在还在使用 Spring Boot 2.4.4，所以我都没有去尝试，在此我也记录下，毕竟使用 Spring Boot 本身的功能是最简单的。</p>
+</div>
+<div class="paragraph">
+<p>见文档： <a href="https://docs.spring.io/spring-boot/docs/2.6.0/reference/html//web.html#web.servlet.embedded-container.customizing.samesite" class="bare">https://docs.spring.io/spring-boot/docs/2.6.0/reference/html//web.html#web.servlet.embedded-container.customizing.samesite</a></p>
+</div>
+<div class="paragraph">
+<p>方式1</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-properties" data-lang="properties">server.servlet.session.cookie.same-site=none</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>方式2</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-java" data-lang="java">@Configuration(proxyBeanMethods = false)
+public class MySameSiteConfiguration {
+
+    @Bean
+    public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
+        return CookieSameSiteSupplier.ofLax().whenHasNameMatching(&#34;myapp.*&#34;);
+    }
+
+}</code></pre>
+</div>
+</div>
+</div>
+</div>
+</div>
+
+</section>
+
+
+    <footer class="article-footer">
+    
+    <section class="article-tags">
+        
+            <a href="/tags/h5/">H5</a>
+        
+            <a href="/tags/cookie/">Cookie</a>
+        
+    </section>
+
+
+    
+    <section class="article-copyright">
+        <svg xmlns="http://www.w3.org/2000/svg" class="icon icon-tabler icon-tabler-copyright" width="24" height="24" viewBox="0 0 24 24" stroke-width="2" stroke="currentColor" fill="none" stroke-linecap="round" stroke-linejoin="round">
+  <path stroke="none" d="M0 0h24v24H0z"/>
+  <circle cx="12" cy="12" r="9" />
+  <path d="M14.5 9a3.5 4 0 1 0 0 6" />
+</svg>
+
+
+
+        <span>Licensed under CC BY-NC-SA 4.0</span>
+    </section>
+    </footer>
+
+    
+</article>
+
+    <aside class="related-contents--wrapper">
+    
+    
+        <h2 class="section-title">相关文章</h2>
+        <div class="related-contents">
+            <div class="flex article-list--tile">
+                
+                    
+<article class="">
+    <a href="/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">maven&#43;svn 版本管理</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java枚举成员方法</h2>
+        </div>
+    </a>
+</article>
+                
+            </div>
+        </div>
+    
+</aside>
+
+
+    
+        
+    <script src="https://utteranc.es/client.js" 
+        repo="cc332030/blog"
+        issue-term="pathname"
+        
+        crossorigin="anonymous"
+        async
+        >
+</script>
+
+<style>
+    .utterances {
+        max-width: unset;
+    }
+</style>
+
+<script>
+    function setUtterancesTheme(theme) {
+        let utterances = document.querySelector('.utterances iframe');
+        if (utterances) {
+            utterances.contentWindow.postMessage(
+                {
+                    type: 'set-theme',
+                    theme: `github-${theme}`
+                },
+                'https://utteranc.es'
+            );
+        }
+    }
+
+    addEventListener('message', event => {
+        if (event.origin !== 'https://utteranc.es') return;
+        setUtterancesTheme(document.body.dataset.scheme)
+    });
+
+    window.addEventListener('onColorSchemeChange', (e) => {
+        setUtterancesTheme(e.detail)
+    })
+</script>
+
+    
+
+    <footer class="site-footer">
+    <section class="copyright">
+        &copy; 
+        
+            2020 - 
+        
+        2022 c332030
+    </section>
+    
+    <section class="powerby">
+        Built with <a href="https://gohugo.io/" target="_blank" rel="noopener">Hugo</a> <br />
+        Theme <b><a href="https://github.com/CaiJimmy/hugo-theme-stack" target="_blank" rel="noopener" data-version="2.3.0">Stack</a></b> designed by <a href="https://jimmycai.com" target="_blank" rel="noopener">Jimmy</a>
+    </section>
+</footer>
+<div class="pswp" tabindex="-1" role="dialog" aria-hidden="true">
+
+    
+    <div class="pswp__bg"></div>
+
+    
+    <div class="pswp__scroll-wrap">
+
+        
+        <div class="pswp__container">
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+            <div class="pswp__item"></div>
+        </div>
+
+        
+        <div class="pswp__ui pswp__ui--hidden">
+
+            <div class="pswp__top-bar">
+
+                
+
+                <div class="pswp__counter"></div>
+
+                <button class="pswp__button pswp__button--close" title="Close (Esc)"></button>
+
+                <button class="pswp__button pswp__button--share" title="Share"></button>
+
+                <button class="pswp__button pswp__button--fs" title="Toggle fullscreen"></button>
+
+                <button class="pswp__button pswp__button--zoom" title="Zoom in/out"></button>
+
+                
+                
+                <div class="pswp__preloader">
+                    <div class="pswp__preloader__icn">
+                        <div class="pswp__preloader__cut">
+                            <div class="pswp__preloader__donut"></div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <div class="pswp__share-modal pswp__share-modal--hidden pswp__single-tap">
+                <div class="pswp__share-tooltip"></div>
+            </div>
+
+            <button class="pswp__button pswp__button--arrow--left" title="Previous (arrow left)">
+            </button>
+
+            <button class="pswp__button pswp__button--arrow--right" title="Next (arrow right)">
+            </button>
+
+            <div class="pswp__caption">
+                <div class="pswp__caption__center"></div>
+            </div>
+
+        </div>
+
+    </div>
+
+</div><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.min.js"integrity="sha256-ePwmChbbvXbsO02lbM3HoHbSHTHFAeChekF1xKJdleo="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><script 
+                src="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe-ui-default.min.js"integrity="sha256-UKkzOn/w1mBxRmLLGrSeyB4e1xbrp4xylgAWb3M42pU="crossorigin="anonymous"
+                defer="true"
+                >
+            </script><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/default-skin/default-skin.css"integrity="sha256-c0uckgykQ9v5k&#43;IqViZOZKc47Jn7KQil4/MP3ySA3F8="crossorigin="anonymous"
+            ><link 
+                rel="stylesheet" 
+                href="https://cdn.jsdelivr.net/npm/photoswipe@4.1.3/dist/photoswipe.css"integrity="sha256-SBLU4vv6CA6lHsZ1XyTdhyjJxCjPif/TRkjnsyGAGnE="crossorigin="anonymous"
+            >
+            </main>
+        </div>
+        <script 
+                src="https://cdn.jsdelivr.net/npm/node-vibrant@3.1.5/dist/vibrant.min.js"integrity="sha256-5NovOZc4iwiAWTYIFiIM7DxKUXKWvpVEuMEPLzcm5/g="crossorigin="anonymous"
+                defer="false"
+                >
+            </script><script type="text/javascript" src="/ts/main.js" defer></script>
+<script>
+    (function () {
+        const customFont = document.createElement('link');
+        customFont.href = "https://fonts.googleapis.com/css2?family=Lato:wght@300;400;700&display=swap";
+
+        customFont.type = "text/css";
+        customFont.rel = "stylesheet";
+
+        document.head.appendChild(customFont);
+    }());
+</script>
+
+    </body>
+</html>

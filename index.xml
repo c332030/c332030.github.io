@@ -6,7 +6,394 @@
         <description>Recent content on c332030</description>
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
-        <lastBuildDate>Tue, 11 May 2021 21:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <lastBuildDate>Fri, 20 May 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
+        <title>解决升级微信开发者工具后无法保存Cookie</title>
+        <link>https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/</link>
+        <pubDate>Fri, 20 May 2022 22:00:00 +0000</pubDate>
+        
+        <guid>https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/</guid>
+        <description>
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_发现问题&#34;&gt;发现问题&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;在开发公司一个 H5 后台接口的时候，前端突然和我说接口抛了异常，但当我知道是哪个接口后，却陷入了疑惑，因为报错的是历史接口，都没动过。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;通过看日志才发现是 token 没有传，请求头里没有，浏览器 application Cookie 里也看不到，找到设置 Cookie 的地方，发现 Set-Cookie 响应头后面有个感叹号，不管是控制台还是点击感叹号、鼠标悬浮感叹号上，都没有任何提示信息。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;所有 Set-Cookie 后面都有感叹号，所以图片截的是 jsessionid 的&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;img.jpg&#34; alt=&#34;img&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;经过查找资料发现，从 Chrome 51 起加个 SameSite 的属性，用于防御 跨站请求伪造（CSRF），这个值默认是 None，也就是允许所有第三方 Cookie，然而从 Chrome 80 开始，SameSite 的默认值变成了 Lax。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;微信授权需要 https，而本地没有 https 的条件（域名证书公司领导管理），虽然一级域名一样，但是还是无法保存 Cookie。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_解决问题&#34;&gt;解决问题&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;我们的页面是嵌入微信小程序的，不存在开放 H5 直接访问的可能，所以这里我可以将 SameSite 的值手动设置为 None。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_方案1_不使用_httpservletresponse_addcookie&#34;&gt;方案1 不使用 HttpServletResponse.addCookie&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;但当我动手时，又发现 Servlet API 4.0.1 中 Cookie 对象并不支持 SameSite 属性，于是我决定不使用 HttpServletResponse.addCookie，手动拼接响应报文头。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * Web 工具类，判断是不是 https
+ * @author c332030
+ */
+public class WebUtils {
+
+    public static final String HTTPS = &amp;#34;https&amp;#34;;
+
+    private WebUtils() {}
+
+    public static boolean isHttps(HttpServletRequest request) {
+
+        // 考虑到 nginx 代理的情况，读取：X-Forwarded-Proto
+        String scheme = request.getHeader(HttpHeaders.X_FORWARDED_PROTO);
+        if(StringUtils.isEmpty(scheme)) {
+            scheme = request.getScheme();
+        }
+
+        return HTTPS.equalsIgnoreCase(scheme);
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * Cookie 工具类
+ * @author c332030
+ */
+public class CookieUtils {
+
+    private CookieUtils() {}
+
+    public static final String HTTPS = &amp;#34;https&amp;#34;;
+
+    public static final String Cookie_Domain = &amp;#34;; Domain=&amp;#34;;
+
+    public static final String Cookie_Path = &amp;#34;; Path=&amp;#34;;
+
+    public static final String Cookie_MaxAge = &amp;#34;; Max-Age=&amp;#34;;
+
+    public static final String Cookie_Secure = &amp;#34;; Secure&amp;#34;;
+
+    public static final String Cookie_HttpOnly = &amp;#34;; HttpOnly&amp;#34;;
+
+    public static final String Cookie_SameSite = &amp;#34;; SameSite=&amp;#34;;
+
+    public static final String Cookie_SameSite_None = &amp;#34;None&amp;#34;;
+    public static final String Cookie_SameSite_Lax = &amp;#34;Lax&amp;#34;;
+    public static final String Cookie_SameSite_Strict = &amp;#34;Strict&amp;#34;;
+
+    /**
+     * 添加 Cookie，替代 HttpServletResponse.addCookie()
+     */
+    public static void addCookie(HttpServletRequest request, HttpServletResponse response, Cookie cookie) {
+
+        StringBuilder cookHeaderStr = new StringBuilder();
+        cookHeaderStr.append(cookie.getName());
+        cookHeaderStr.append(&amp;#34;=&amp;#34;);
+        cookHeaderStr.append(cookie.getValue());
+
+        StringOptional.ofEmptyAble(cookie.getDomain()).ifNotEmpty(e -&amp;gt; {
+            cookHeaderStr.append(Cookie_Domain);
+            cookHeaderStr.append(e);
+        });
+
+        cookHeaderStr.append(Cookie_Path);
+        String path = StringUtils.isNotEmpty(cookie.getPath()) ? cookie.getPath() : &amp;#34;/&amp;#34;;
+        cookHeaderStr.append(path);
+
+        if(cookie.getMaxAge() &amp;gt;= 0) {
+            cookHeaderStr.append(Cookie_MaxAge);
+            cookHeaderStr.append(cookie.getMaxAge());
+        }
+
+        // SameSite=None 且 https 时，需要设置 Secure 属性
+        if(WebUtils.isHttps(request) || cookie.getSecure()) {
+            cookHeaderStr.append(Cookie_Secure);
+        }
+
+        if(cookie.isHttpOnly()) {
+            cookHeaderStr.append(Cookie_HttpOnly);
+        }
+
+        cookHeaderStr.append(Cookie_SameSite);
+        cookHeaderStr.append(Cookie_SameSite_None);
+
+        response.addHeader(HttpHeaders.SET_COOKIE, cookHeaderStr.toString());
+
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;如果在 https 的网络下设置 SameSite=None 但没有设置 Secure 属性时，也会出现感叹号，不过这个时候是有提示的。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;img.png&#34; alt=&#34;img&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;img_1.png&#34; alt=&#34;img 1&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;这个时候 token 的 Cookie 是管用了，可是 jsessionid 的 Cookie 没有加上 SameSite 属性，我只能换一种方案。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_方案2_使用过滤器&#34;&gt;方案2 使用过滤器&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;于是我想到了过滤器，直接上代码。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * 常量类不解释
+ * @author c332030
+ */
+public class HttpHeaderConstants {
+
+    private HttpHeaderConstants() {}
+
+    public static final String HTTPS = &amp;#34;https&amp;#34;;
+
+    public static final String Cookie_SameSite = &amp;#34;SameSite&amp;#34;;
+
+    public static final String Cookie_SameSite_Strict = &amp;#34;Strict&amp;#34;;
+
+    public static final String Cookie_SameSite_Lax = &amp;#34;Lax&amp;#34;;
+
+    public static final String Cookie_SameSite_None = &amp;#34;None&amp;#34;;
+
+    public static final String Cookie_Secure = &amp;#34;Secure&amp;#34;;
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * Cookie 工具类
+ * @author c332030
+ */
+public class CookieUtils {
+
+    private CookieUtils() {}
+
+    public static String getAppendedHeader(String header, String key) {
+        return getAppendedHeader(header, key, null);
+    }
+
+    public static String getAppendedHeader(String header, String key, String value) {
+        StringBuilder stringBuilder = new StringBuilder(header);
+        append(stringBuilder, key, value);
+        return stringBuilder.toString();
+    }
+
+    public static void append(StringBuilder headerBuilder, String key) {
+        append(headerBuilder, key, null);
+    }
+
+    public static void append(StringBuilder headerBuilder, String key, String value) {
+
+        headerBuilder.append(&amp;#34;; &amp;#34;);
+        headerBuilder.append(key);
+
+        if (StringUtils.isNotEmpty(value)) {
+            headerBuilder.append(&amp;#34;=&amp;#34;);
+            headerBuilder.append(value);
+        }
+    }
+
+    /**
+     * 获取 HttpServletResponse 中已有的 Cookie，然后拼接上 SameSite 属性
+     * @author c332030
+     */
+    public static void appendSameSite(HttpServletRequest request, HttpServletResponse response, String defaultSameSiteValue) {
+
+        Collection&amp;lt;String&amp;gt; cookieHeaders = response.getHeaders(HttpHeaders.SET_COOKIE);
+        if(CollectionUtils.isEmpty(cookieHeaders)) {
+            return;
+        }
+
+        List&amp;lt;String&amp;gt; cookieHeadersNew = new ArrayList&amp;lt;&amp;gt;(cookieHeaders.size());
+        cookieHeaders.forEach(cookieHeader -&amp;gt; {
+
+            if (cookieHeader.contains(HttpHeaderConstants.Cookie_SameSite)) {
+                cookieHeadersNew.add(cookieHeader);
+                return;
+            }
+
+            StringBuilder stringBuilder = new StringBuilder(cookieHeader);
+
+            // SameSite=None
+            CookieUtils.append(stringBuilder, HttpHeaderConstants.Cookie_SameSite, defaultSameSiteValue);
+
+            // Secure
+            if (WebUtils.isHttps(request) &amp;amp;&amp;amp; !cookieHeader.contains(HttpHeaderConstants.Cookie_Secure)) {
+                CookieUtils.append(stringBuilder, HttpHeaderConstants.Cookie_Secure);
+            }
+
+            cookieHeadersNew.add(stringBuilder.toString());
+        });
+
+        Iterator&amp;lt;String&amp;gt; cookieHeadersIterator = cookieHeadersNew.iterator();
+
+        // clear old cookies
+        response.setHeader(HttpHeaders.SET_COOKIE, cookieHeadersIterator.next());
+        while (cookieHeadersIterator.hasNext()) {
+            response.addHeader(HttpHeaders.SET_COOKIE, cookieHeadersIterator.next());
+        }
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * SameSite 过滤器
+ * @author c332030
+ */
+public class SameSiteFilter implements Filter {
+
+    @Override
+    public void doFilter(HttpServletRequest request, HttpServletResponse response, FilterChain chain) throws IOException, ServletException {
+
+        chain.doFilter(request, response);
+
+        // 执行完业务流程再修改 Cookie
+        CookieUtils.appendSameSite(request, response, HttpHeaderConstants.Cookie_SameSite_None);
+
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;在单元测试中，CookieUtils.appendSameSite 方法正常运行，字符串拼接的值也是对的，可是返回的报文中却没有 SameSite 和 Secure 属性。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;查找 Stackoverflow 资料得知，response.setHeader 需要修改响应，但响应请求已经提交时，服务器就会忽略对 response 做出的修改。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;过滤器中出现这种情况只发生在添加了 @ResponseBody 注解的接口上。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;这个问题刚发现的时候，着实让我无法理解，后来我想到 response.getWriter 关闭后再写入数据时会报错，我也就理解了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;这个时候就只能在提交前做修改了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_方案3_实现_responsebodyadvice_在提交前做修改&#34;&gt;方案3 实现 ResponseBodyAdvice 在提交前做修改&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;还好有先见之明，考虑到拼接 SameSite 的需求可能会在其他地方用到，所以抽离出了 CookieUtils.appendSameSite 方法。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;/**
+ * 实现 ResponseBodyAdvice，在提交前修改 Cookie
+ * @author c332030
+ */
+@ControllerAdvice
+public class SameSiteControllerAdvice implements ResponseBodyAdvice&amp;lt;Object&amp;gt; {
+
+    @Override
+    public boolean supports(MethodParameter returnType, Class&amp;lt;? extends HttpMessageConverter&amp;lt;?&amp;gt;&amp;gt; converterType) {
+        return true;
+    }
+
+    @Override
+    public Object beforeBodyWrite(Object body, MethodParameter returnType, MediaType selectedContentType,
+                                  Class&amp;lt;? extends HttpMessageConverter&amp;lt;?&amp;gt;&amp;gt; selectedConverterType,
+                                  ServerHttpRequest serverHttpRequest,
+                                  ServerHttpResponse serverHttpResponse) {
+
+        HttpServletRequest request = ((ServletServerHttpRequest) serverHttpRequest).getServletRequest();
+        HttpServletResponse response = ((ServletServerHttpResponse) serverHttpResponse).getServletResponse();
+
+        CookieUtils.appendSameSite(request, response, HttpHeaderConstants.Cookie_SameSite_None);
+
+        return body;
+    }
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;以前只知道有 @ControllerAdvice 这个注解，但是不知道具体干嘛用的，这次终于用上了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;这次终于成功了，升级最新版微信开发工具测试后，Cookie 传递正常，来张成功的截图。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;image-2022-07-10-15-18-17-793.png&#34; alt=&#34;image 2022 07 10 15 18 17 793&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect2&#34;&gt;
+&lt;h3 id=&#34;_方案4使用_spring_boot_自带的功能&#34;&gt;方案4，使用 Spring Boot 自带的功能&lt;/h3&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;这个方案我很早就搜到了，但是要求 Spring Boot 2.6.0+，我们现在还在使用 Spring Boot 2.4.4，所以我都没有去尝试，在此我也记录下，毕竟使用 Spring Boot 本身的功能是最简单的。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;见文档： &lt;a href=&#34;https://docs.spring.io/spring-boot/docs/2.6.0/reference/html//web.html#web.servlet.embedded-container.customizing.samesite&#34; class=&#34;bare&#34;&gt;https://docs.spring.io/spring-boot/docs/2.6.0/reference/html//web.html#web.servlet.embedded-container.customizing.samesite&lt;/a&gt;&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;方式1&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-properties&#34; data-lang=&#34;properties&#34;&gt;server.servlet.session.cookie.same-site=none&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;方式2&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-java&#34; data-lang=&#34;java&#34;&gt;@Configuration(proxyBeanMethods = false)
+public class MySameSiteConfiguration {
+
+    @Bean
+    public CookieSameSiteSupplier applicationCookieSameSiteSupplier() {
+        return CookieSameSiteSupplier.ofLax().whenHasNameMatching(&amp;#34;myapp.*&amp;#34;);
+    }
+
+}&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+</description>
+        </item>
+        <item>
         <title>maven&#43;svn 版本管理</title>
         <link>https://c332030.com/p/2021/05/maven-svn-%E7%89%88%E6%9C%AC%E7%AE%A1%E7%90%86/</link>
         <pubDate>Tue, 11 May 2021 21:00:00 +0000</pubDate>
