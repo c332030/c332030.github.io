@@ -6,7 +6,18 @@
     <description>Recent content in Posts on c332030</description>
     <generator>Hugo -- gohugo.io</generator>
     <language>zh-cn</language>
-    <lastBuildDate>Fri, 20 May 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <lastBuildDate>Tue, 13 Sep 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/post/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL行锁实践</title>
+      <link>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 13 Sep 2022 22:00:00 +0000</pubDate>
+      
+      <guid>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
+      <description>发现问题 以下几种情况都不满足
+  主从架构，查询的从库，数据不是最新
+     </description>
+    </item>
+    
     <item>
       <title>解决升级微信开发者工具后无法保存Cookie</title>
       <link>https://c332030.com/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/</link>

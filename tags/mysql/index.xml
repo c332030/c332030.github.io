@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8" standalone="yes"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>MySQL on c332030</title>
+    <link>https://c332030.com/tags/mysql/</link>
+    <description>Recent content in MySQL on c332030</description>
+    <generator>Hugo -- gohugo.io</generator>
+    <language>zh-cn</language>
+    <lastBuildDate>Tue, 13 Sep 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/tags/mysql/index.xml" rel="self" type="application/rss+xml" />
+    <item>
+      <title>MySQL行锁实践</title>
+      <link>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
+      <pubDate>Tue, 13 Sep 2022 22:00:00 +0000</pubDate>
+      
+      <guid>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
+      <description>发现问题 以下几种情况都不满足
+  主从架构，查询的从库，数据不是最新
+     </description>
+    </item>
+    
+  </channel>
+</rss>

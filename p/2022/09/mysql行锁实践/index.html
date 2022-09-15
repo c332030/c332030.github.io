@@ -1,26 +1,23 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
- public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
-   Enum 方法 我列出用的比较多的方法
-  name()'><title>java枚举成员方法</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='发现问题 以下几种情况都不满足
+  主从架构，查询的从库，数据不是最新
+     '><title>MySQL行锁实践</title>
 
-<link rel='canonical' href='https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/'>
+<link rel='canonical' href='https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='java枚举成员方法'>
-<meta property='og:description' content='前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
- public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
-   Enum 方法 我列出用的比较多的方法
-  name()'>
-<meta property='og:url' content='https://c332030.com/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/'>
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MySQL行锁实践'>
+<meta property='og:description' content='发现问题 以下几种情况都不满足
+  主从架构，查询的从库，数据不是最新
+     '>
+<meta property='og:url' content='https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/'>
 <meta property='og:site_name' content='c332030'>
-<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='java' /><meta property='article:tag' content='enum' /><meta property='article:published_time' content='2021-03-21T18:48:00&#43;00:00'/><meta property='article:modified_time' content='2021-03-21T18:48:00&#43;00:00'/>
-<meta name="twitter:title" content="java枚举成员方法">
-<meta name="twitter:description" content="前言 刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：
- public enum TestEnum { TEST(&amp;#34;TEST&amp;#34;, &amp;#34;测试&amp;#34;) ; private final String code; private final String name; TestEnum(String code, String name) { this.code = code; this.name = name; } // get set ... public static TestEnum codeOf(String code) { // 通过 code 获取枚举 } }   首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。 我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。
-   Enum 方法 我列出用的比较多的方法
-  name()">
+<meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='MySQL' /><meta property='article:published_time' content='2022-09-13T22:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-09-13T22:00:00&#43;00:00'/>
+<meta name="twitter:title" content="MySQL行锁实践">
+<meta name="twitter:description" content="发现问题 以下几种情况都不满足
+  主从架构，查询的从库，数据不是最新
+     ">
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -223,7 +220,7 @@ if (!doNotTrack) {
     
 
     <h2 class="article-title">
-        <a href="/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">java枚举成员方法</a>
+        <a href="/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/">MySQL行锁实践</a>
     </h2>
 
     <footer class="article-time">
@@ -235,140 +232,23 @@ if (!doNotTrack) {
 
 
 
-        <time class="article-time--published">2021-03-21</time>
+        <time class="article-time--published">2022-09-13</time>
     </footer></div>
 </header>
 
     <section class="article-content">
     <div class="sect1">
-<h2 id="_前言">前言</h2>
+<h2 id="_发现问题">发现问题</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>刚进公司的时候，看到同事定义的枚举类中定义了一个 code 保存枚举的名字，大概是这样：</p>
-</div>
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public enum TestEnum {
-
-    TEST(&#34;TEST&#34;, &#34;测试&#34;)
-    ;
-
-    private final String code;
-
-    private final String name;
-
-    TestEnum(String code, String name) {
-        this.code = code;
-        this.name = name;
-    }
-
-    // get set ...
-
-    public static TestEnum codeOf(String code) {
-        // 通过 code 获取枚举
-    }
-
-}</code></pre>
-</div>
-</div>
-<div class="paragraph">
-<p>首先看到的是 TEST 这个单词出现了两次，然后每个枚举都定义了 codeOf，code 和 name 方法都添加了 set 方法。<br/>
-我本能上觉得，java 语言不会设计得这么傻，前两个问题应该已经有了成熟方案，于是去看枚举的父类 Enum，果然找到了。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_enum_方法">Enum 方法</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>我列出用的比较多的方法</p>
+<p>以下几种情况都不满足</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>name()</p>
-<div class="literalblock">
-<div class="content">
-<pre>获取的枚举的名称，这是一个成员方法，作用和 getCode() 是一样的</pre>
-</div>
-</div>
-</li>
-<li>
-<p>static valueOf(String name)</p>
-<div class="literalblock">
-<div class="content">
-<pre>这个方法作用和 codeOf 是一样的，这是一个静态方法，，name() 和这个方法都存在，那么 code 这个字段就没有用了</pre>
-</div>
-</div>
-</li>
-<li>
-<p>ordinal()</p>
-<div class="literalblock">
-<div class="content">
-<pre>获取枚举定义顺序，从 0 开始，这是一个成员方法，后面开发中我看到 fastjson 的序列花配置使用到了这个方法。
-fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的每一个位置存储了一个配置，使用 ordinal 方法来确定配置的二进制位置。</pre>
-</div>
-</div>
-</li>
-<li>
-<p>.toString()</p>
-<div class="literalblock">
-<div class="content">
-<pre>底层调用的 name()，所以我在传递参数给 mybatis 时，有些字段直接传的枚举，限定参数范围。</pre>
-</div>
-</div>
-</li>
-<li>
-<p>values()</p>
-<div class="literalblock">
-<div class="content">
-<pre>获取所有的枚举，这是一个静态方法，并没有写在 Enum 类中，是 jdk 生成的，底层是深拷贝枚举类中的枚举数组。
-为什么要深拷贝一次呢，理由是避免枚举类中的枚举数组被修改，如果经常会调用这个方法，建议定义一个静态 List 常量保存起来，避免重复深拷贝。</pre>
-</div>
-</div>
+<p>主从架构，查询的从库，数据不是最新</p>
 </li>
 </ol>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_其他">其他</h2>
-<div class="sectionbody">
-<div class="paragraph">
-<p>考虑到枚举类中的枚举都是常量，我用 final 修饰了 name 字段，避免 name 字段被无意修改，<br/>
-后面升级 idea 后，枚举中没有 set 方法的字段都会自动加 final 修饰符，也就没有再手动修改了。</p>
-</div>
-</div>
-</div>
-<div class="sect1">
-<h2 id="_修改后的代码">修改后的代码</h2>
-<div class="sectionbody">
-<div class="listingblock">
-<div class="content">
-<pre class="highlight"><code class="language-java" data-lang="java">public enum TestEnum {
-
-    TEST( &#34;测试&#34;),
-
-    ;
-
-    private final String name;
-
-    TestEnum(String name) {
-        this.name = name;
-    }
-
-    /*
-     * 兼容旧代码
-     */
-    public String getCode() {
-        return name();
-    }
-
-    public String getName() {
-        return name;
-    }
-}</code></pre>
-</div>
 </div>
 </div>
 </div>
@@ -380,9 +260,7 @@ fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的
     
     <section class="article-tags">
         
-            <a href="/tags/java/">java</a>
-        
-            <a href="/tags/enum/">enum</a>
+            <a href="/tags/mysql/">MySQL</a>
         
     </section>
 
@@ -413,18 +291,6 @@ fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的
                 
                     
 <article class="">
-    <a href="/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/">
-        
-        
-
-        <div class="article-details">
-            <h2 class="article-title">MySQL行锁实践</h2>
-        </div>
-    </a>
-</article>
-                
-                    
-<article class="">
     <a href="/p/2022/05/%E8%A7%A3%E5%86%B3%E5%8D%87%E7%BA%A7%E5%BE%AE%E4%BF%A1%E5%BC%80%E5%8F%91%E8%80%85%E5%B7%A5%E5%85%B7%E5%90%8E%E6%97%A0%E6%B3%95%E4%BF%9D%E5%AD%98cookie/">
         
         
@@ -443,6 +309,18 @@ fastjson 的序列号配置存在一个 int 类型的字段中，二进制中的
 
         <div class="article-details">
             <h2 class="article-title">maven&#43;svn 版本管理</h2>
+        </div>
+    </a>
+</article>
+                
+                    
+<article class="">
+    <a href="/p/2021/03/java%E6%9E%9A%E4%B8%BE%E6%88%90%E5%91%98%E6%96%B9%E6%B3%95/">
+        
+        
+
+        <div class="article-details">
+            <h2 class="article-title">java枚举成员方法</h2>
         </div>
     </a>
 </article>
