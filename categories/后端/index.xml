@@ -8,14 +8,32 @@
     <language>zh-cn</language>
     <lastBuildDate>Tue, 13 Sep 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/categories/%E5%90%8E%E7%AB%AF/index.xml" rel="self" type="application/rss+xml" />
     <item>
-      <title>MySQL行锁实践</title>
-      <link>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
+      <title>MySQL锁实践</title>
+      <link>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
       <pubDate>Tue, 13 Sep 2022 22:00:00 +0000</pubDate>
       
-      <guid>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
-      <description>发现问题 以下几种情况都不满足
-  主从架构，查询的从库，数据不是最新
-     </description>
+      <guid>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
+      <description>发现问题 最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。
+ 翻阅日志发现，查询回来的记录数量为 0，插入又失败了。
+ 我想到了几种情况：
+  数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；
+  主从架构，查询的从库，数据不是最新。
+   思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。
+   使用行锁 所以，我把业务代码调整了下：
+ 之前
+  查询记录
+  不存在则插入记录
+  使用查回来或者新建的对象
+   现在
+  使用 insert on duplicate key update 插入或者更新数据（当前事务锁定记录）
+  查询记录
+  使用查回来的对象
+   成功解决问题。
+ 我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。
+   使用间隙锁 如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？
+ 那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。
+ 首先，我先建立这样一张表
+ create table table_name ( id int auto_increment primary key, value int null );   插入测试数据</description>
     </item>
     
     <item>

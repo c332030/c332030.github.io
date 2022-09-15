@@ -1,23 +1,77 @@
 <!DOCTYPE html>
 <html lang="zh-cn">
     <head><meta charset='utf-8'>
-<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='发现问题 以下几种情况都不满足
-  主从架构，查询的从库，数据不是最新
-     '><title>MySQL行锁实践</title>
+<meta name='viewport' content='width=device-width, initial-scale=1'><meta name='description' content='发现问题 最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。
+ 翻阅日志发现，查询回来的记录数量为 0，插入又失败了。
+ 我想到了几种情况：
+  数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；
+  主从架构，查询的从库，数据不是最新。
+   思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。
+   使用行锁 所以，我把业务代码调整了下：
+ 之前
+  查询记录
+  不存在则插入记录
+  使用查回来或者新建的对象
+   现在
+  使用 insert on duplicate key update 插入或者更新数据（当前事务锁定记录）
+  查询记录
+  使用查回来的对象
+   成功解决问题。
+ 我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。
+   使用间隙锁 如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？
+ 那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。
+ 首先，我先建立这样一张表
+ create table table_name ( id int auto_increment primary key, value int null );   插入测试数据'><title>MySQL锁实践</title>
 
-<link rel='canonical' href='https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/'>
+<link rel='canonical' href='https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/'>
 
-<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MySQL行锁实践'>
-<meta property='og:description' content='发现问题 以下几种情况都不满足
-  主从架构，查询的从库，数据不是最新
-     '>
-<meta property='og:url' content='https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/'>
+<link rel="stylesheet" href="/scss/style.min.css"><meta property='og:title' content='MySQL锁实践'>
+<meta property='og:description' content='发现问题 最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。
+ 翻阅日志发现，查询回来的记录数量为 0，插入又失败了。
+ 我想到了几种情况：
+  数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；
+  主从架构，查询的从库，数据不是最新。
+   思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。
+   使用行锁 所以，我把业务代码调整了下：
+ 之前
+  查询记录
+  不存在则插入记录
+  使用查回来或者新建的对象
+   现在
+  使用 insert on duplicate key update 插入或者更新数据（当前事务锁定记录）
+  查询记录
+  使用查回来的对象
+   成功解决问题。
+ 我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。
+   使用间隙锁 如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？
+ 那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。
+ 首先，我先建立这样一张表
+ create table table_name ( id int auto_increment primary key, value int null );   插入测试数据'>
+<meta property='og:url' content='https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/'>
 <meta property='og:site_name' content='c332030'>
 <meta property='og:type' content='article'><meta property='article:section' content='Post' /><meta property='article:tag' content='MySQL' /><meta property='article:published_time' content='2022-09-13T22:00:00&#43;00:00'/><meta property='article:modified_time' content='2022-09-13T22:00:00&#43;00:00'/>
-<meta name="twitter:title" content="MySQL行锁实践">
-<meta name="twitter:description" content="发现问题 以下几种情况都不满足
-  主从架构，查询的从库，数据不是最新
-     ">
+<meta name="twitter:title" content="MySQL锁实践">
+<meta name="twitter:description" content="发现问题 最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。
+ 翻阅日志发现，查询回来的记录数量为 0，插入又失败了。
+ 我想到了几种情况：
+  数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；
+  主从架构，查询的从库，数据不是最新。
+   思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。
+   使用行锁 所以，我把业务代码调整了下：
+ 之前
+  查询记录
+  不存在则插入记录
+  使用查回来或者新建的对象
+   现在
+  使用 insert on duplicate key update 插入或者更新数据（当前事务锁定记录）
+  查询记录
+  使用查回来的对象
+   成功解决问题。
+ 我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。
+   使用间隙锁 如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？
+ 那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。
+ 首先，我先建立这样一张表
+ create table table_name ( id int auto_increment primary key, value int null );   插入测试数据">
 <script type="application/javascript">
 var doNotTrack = false;
 if (!doNotTrack) {
@@ -220,7 +274,7 @@ if (!doNotTrack) {
     
 
     <h2 class="article-title">
-        <a href="/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/">MySQL行锁实践</a>
+        <a href="/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/">MySQL锁实践</a>
     </h2>
 
     <footer class="article-time">
@@ -241,14 +295,191 @@ if (!doNotTrack) {
 <h2 id="_发现问题">发现问题</h2>
 <div class="sectionbody">
 <div class="paragraph">
-<p>以下几种情况都不满足</p>
+<p>最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。</p>
+</div>
+<div class="paragraph">
+<p>翻阅日志发现，查询回来的记录数量为 0，插入又失败了。</p>
+</div>
+<div class="paragraph">
+<p>我想到了几种情况：</p>
 </div>
 <div class="olist arabic">
 <ol class="arabic">
 <li>
-<p>主从架构，查询的从库，数据不是最新</p>
+<p>数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；</p>
+</li>
+<li>
+<p>主从架构，查询的从库，数据不是最新。</p>
 </li>
 </ol>
+</div>
+<div class="paragraph">
+<p>思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_使用行锁">使用行锁</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>所以，我把业务代码调整了下：</p>
+</div>
+<div class="paragraph">
+<p>之前</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>查询记录</p>
+</li>
+<li>
+<p>不存在则插入记录</p>
+</li>
+<li>
+<p>使用查回来或者新建的对象</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>现在</p>
+</div>
+<div class="olist arabic">
+<ol class="arabic">
+<li>
+<p>使用 <code>insert on duplicate key update</code> 插入或者更新数据（当前事务锁定记录）</p>
+</li>
+<li>
+<p>查询记录</p>
+</li>
+<li>
+<p>使用查回来的对象</p>
+</li>
+</ol>
+</div>
+<div class="paragraph">
+<p>成功解决问题。</p>
+</div>
+<div class="paragraph">
+<p>我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。</p>
+</div>
+</div>
+</div>
+<div class="sect1">
+<h2 id="_使用间隙锁">使用间隙锁</h2>
+<div class="sectionbody">
+<div class="paragraph">
+<p>如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？</p>
+</div>
+<div class="paragraph">
+<p>那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。</p>
+</div>
+<div class="paragraph">
+<p>首先，我先建立这样一张表</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">create table table_name
+(
+    id    int auto_increment primary key,
+    value int null
+);</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>插入测试数据</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">insert into table_name
+    (id, value)
+values
+    (1, 1),
+    (2, 3)</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>然后将 idea 改成 <code>手动事务</code> 模式</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="idea手动事务.webp" alt="idea手动事务"/>
+</div>
+</div>
+<div class="paragraph">
+<p>查询并锁定不存在的记录，<code>for update</code> 用于查询时锁定记录</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">select *
+from table_name
+where id = 2
+for update</code></pre>
+</div>
+</div>
+<div class="paragraph">
+<p>在另一个连接（也就是另一个事务）里插入 id = 2 的记录，结果报获取锁超时，证实了锁的存在，那是表锁还是间隙锁呢？</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="idea新连接.webp" alt="idea新连接"/>
+</div>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">insert into table_name
+    (id, value)
+values
+    (2, 2)</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="间隙锁超时插入失败.webp" alt="间隙锁超时插入失败"/>
+</div>
+</div>
+<div class="paragraph">
+<p>试下插入 id = 4 的记录，插入成功</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">insert into table_name
+    (id, value)
+values
+    (4, 4)</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="不在间隙锁范围-插入成功.webp" alt="不在间隙锁范围 插入成功"/>
+</div>
+</div>
+<div class="paragraph">
+<p>试下删除 id = 1 和 3 的记录，删除成功，证明了不是表锁。</p>
+</div>
+<div class="listingblock">
+<div class="content">
+<pre class="highlight"><code class="language-sql" data-lang="sql">delete from table_name
+where id (1, 3)</code></pre>
+</div>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="成功删除不在间隙锁范围的数据.webp" alt="成功删除不在间隙锁范围的数据"/>
+</div>
+</div>
+<div class="paragraph">
+<p>然后我们再提交查询锁定 id = 2 记录的事务，再次执行插入 id = 2 的记录，成功插入。</p>
+</div>
+<div class="imageblock">
+<div class="content">
+<img src="释放间隙锁-插入成功.webp" alt="释放间隙锁 插入成功"/>
+</div>
+</div>
+<div class="paragraph">
+<p>以上实验证实 <code>select …​ for update</code> 在不存在记录的情况下，可以使用间隙锁，避免在事务未提交的情况下，其他事务插入了查询锁住的 id 值记录。</p>
+</div>
+<div class="paragraph">
+<p>以前我只在 oracle 上用过 <code>for update</code>，这次在 mysql 上用到了，以后我就知道如果在查询时锁住记录了。加上以前只听过间隙锁，这次切身实践测试了间隙锁，也是感触颇深。</p>
 </div>
 </div>
 </div>

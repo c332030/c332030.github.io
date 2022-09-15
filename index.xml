@@ -7,23 +7,200 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Tue, 13 Sep 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>MySQL行锁实践</title>
-        <link>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
+        <title>MySQL锁实践</title>
+        <link>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
         <pubDate>Tue, 13 Sep 2022 22:00:00 +0000</pubDate>
         
-        <guid>https://c332030.com/p/2022/09/mysql%E8%A1%8C%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
+        <guid>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
         <description>&lt;div class=&#34;sect1&#34;&gt;
 &lt;h2 id=&#34;_发现问题&#34;&gt;发现问题&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;以下几种情况都不满足&lt;/p&gt;
+&lt;p&gt;最近写的一个定时任务出现了主键冲突，数据插入失败了。我记得我有在插入前查询是否存在，但是仍然出现了这种情况。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;翻阅日志发现，查询回来的记录数量为 0，插入又失败了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;我想到了几种情况：&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;olist arabic&#34;&gt;
 &lt;ol class=&#34;arabic&#34;&gt;
 &lt;li&gt;
-&lt;p&gt;主从架构，查询的从库，数据不是最新&lt;/p&gt;
+&lt;p&gt;数据在其他事务里插入了，但还没提交，导致这个事务里查询不存在但插入失败，因为我们的事务级别是可重复读；&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;主从架构，查询的从库，数据不是最新。&lt;/p&gt;
 &lt;/li&gt;
 &lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;思索过后，发现第二张情况不满足，因为我们的测试环境只有一个数据库，那就只有第一种情况了。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_使用行锁&#34;&gt;使用行锁&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;所以，我把业务代码调整了下：&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;之前&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;olist arabic&#34;&gt;
+&lt;ol class=&#34;arabic&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;查询记录&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;不存在则插入记录&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用查回来或者新建的对象&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;现在&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;olist arabic&#34;&gt;
+&lt;ol class=&#34;arabic&#34;&gt;
+&lt;li&gt;
+&lt;p&gt;使用 &lt;code&gt;insert on duplicate key update&lt;/code&gt; 插入或者更新数据（当前事务锁定记录）&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;查询记录&lt;/p&gt;
+&lt;/li&gt;
+&lt;li&gt;
+&lt;p&gt;使用查回来的对象&lt;/p&gt;
+&lt;/li&gt;
+&lt;/ol&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;成功解决问题。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;我知道会存在这种情况，但是之前这样写都没有发生过这种情况，也就放松了警惕。&lt;/p&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;sect1&#34;&gt;
+&lt;h2 id=&#34;_使用间隙锁&#34;&gt;使用间隙锁&lt;/h2&gt;
+&lt;div class=&#34;sectionbody&#34;&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;如果说，要求一定要先查询，判断不存在在插入，而且不能发生主键冲突，那又该如果处理呢？&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;那只能在查询时加上锁了，可是记录不存在，那锁的是表吗？我猜可能是间隙锁，刚好趁这个机会，测试一下间隙锁。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;首先，我先建立这样一张表&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;create table table_name
+(
+    id    int auto_increment primary key,
+    value int null
+);&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;插入测试数据&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;insert into table_name
+    (id, value)
+values
+    (1, 1),
+    (2, 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;然后将 idea 改成 &lt;code&gt;手动事务&lt;/code&gt; 模式&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;idea手动事务.webp&#34; alt=&#34;idea手动事务&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;查询并锁定不存在的记录，&lt;code&gt;for update&lt;/code&gt; 用于查询时锁定记录&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;select *
+from table_name
+where id = 2
+for update&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;在另一个连接（也就是另一个事务）里插入 id = 2 的记录，结果报获取锁超时，证实了锁的存在，那是表锁还是间隙锁呢？&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;idea新连接.webp&#34; alt=&#34;idea新连接&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;insert into table_name
+    (id, value)
+values
+    (2, 2)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;间隙锁超时插入失败.webp&#34; alt=&#34;间隙锁超时插入失败&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;试下插入 id = 4 的记录，插入成功&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;insert into table_name
+    (id, value)
+values
+    (4, 4)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;不在间隙锁范围-插入成功.webp&#34; alt=&#34;不在间隙锁范围 插入成功&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;试下删除 id = 1 和 3 的记录，删除成功，证明了不是表锁。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;listingblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;pre class=&#34;highlight&#34;&gt;&lt;code class=&#34;language-sql&#34; data-lang=&#34;sql&#34;&gt;delete from table_name
+where id (1, 3)&lt;/code&gt;&lt;/pre&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;成功删除不在间隙锁范围的数据.webp&#34; alt=&#34;成功删除不在间隙锁范围的数据&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;然后我们再提交查询锁定 id = 2 记录的事务，再次执行插入 id = 2 的记录，成功插入。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;imageblock&#34;&gt;
+&lt;div class=&#34;content&#34;&gt;
+&lt;img src=&#34;释放间隙锁-插入成功.webp&#34; alt=&#34;释放间隙锁 插入成功&#34;/&gt;
+&lt;/div&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;以上实验证实 &lt;code&gt;select …​ for update&lt;/code&gt; 在不存在记录的情况下，可以使用间隙锁，避免在事务未提交的情况下，其他事务插入了查询锁住的 id 值记录。&lt;/p&gt;
+&lt;/div&gt;
+&lt;div class=&#34;paragraph&#34;&gt;
+&lt;p&gt;以前我只在 oracle 上用过 &lt;code&gt;for update&lt;/code&gt;，这次在 mysql 上用到了，以后我就知道如果在查询时锁住记录了。加上以前只听过间隙锁，这次切身实践测试了间隙锁，也是感触颇深。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
