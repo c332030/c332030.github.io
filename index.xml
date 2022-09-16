@@ -7,11 +7,11 @@
         <generator>Hugo -- gohugo.io</generator>
         <language>zh-cn</language>
         <lastBuildDate>Tue, 13 Sep 2022 22:00:00 +0000</lastBuildDate><atom:link href="https://c332030.com/index.xml" rel="self" type="application/rss+xml" /><item>
-        <title>MySQL锁实践</title>
-        <link>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</link>
+        <title>MySQL锁实践-幻读</title>
+        <link>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5-%E5%B9%BB%E8%AF%BB/</link>
         <pubDate>Tue, 13 Sep 2022 22:00:00 +0000</pubDate>
         
-        <guid>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5/</guid>
+        <guid>https://c332030.com/p/2022/09/mysql%E9%94%81%E5%AE%9E%E8%B7%B5-%E5%B9%BB%E8%AF%BB/</guid>
         <description>&lt;div class=&#34;sect1&#34;&gt;
 &lt;h2 id=&#34;_发现问题&#34;&gt;发现问题&lt;/h2&gt;
 &lt;div class=&#34;sectionbody&#34;&gt;
@@ -197,10 +197,10 @@ where id (1, 3)&lt;/code&gt;&lt;/pre&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;以上实验证实 &lt;code&gt;select …​ for update&lt;/code&gt; 在不存在记录的情况下，可以使用间隙锁，避免在事务未提交的情况下，其他事务插入了查询锁住的 id 值记录。&lt;/p&gt;
+&lt;p&gt;证实 &lt;code&gt;select …​ for update&lt;/code&gt; 可以在不存在记录的情况下，可以使用间隙锁，避免在事务未提交的情况下，其他事务插入了查询锁住的 id 值记录。&lt;/p&gt;
 &lt;/div&gt;
 &lt;div class=&#34;paragraph&#34;&gt;
-&lt;p&gt;以前我只在 oracle 上用过 &lt;code&gt;for update&lt;/code&gt;，这次在 mysql 上用到了，以后我就知道如果在查询时锁住记录了。加上以前只听过间隙锁，这次切身实践测试了间隙锁，也是感触颇深。&lt;/p&gt;
+&lt;p&gt;其实吧，这个就是 &lt;code&gt;幻读&lt;/code&gt;，我也是写完这篇文章后，才发现的，所以 MySQL 可重复读不能解决幻读，但是可以通过一些手段保障避免幻读产生。&lt;/p&gt;
 &lt;/div&gt;
 &lt;/div&gt;
 &lt;/div&gt;
