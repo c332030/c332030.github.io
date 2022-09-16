@@ -8,4 +8,4 @@ jobs:
     uses: cc332030/git/.github/workflows/mirror.yml@master
     secrets:
       SSH_PRIVATE_KEY: ${{ secrets.SSH_PRIVATE_KEY }}
-      DESTINATION: git@gitee.com:${{ github.actor }}.git
+      DESTINATION: git@gitee.com:${{ github.actor }}/${{ github.actor }}.git
